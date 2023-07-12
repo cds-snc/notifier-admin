@@ -1,8 +1,9 @@
+from typing import List
 from app.notify_client import NotifyAdminAPIClient
-
+from app.types import TemplateStatistics
 
 class TemplateStatisticsApiClient(NotifyAdminAPIClient):
-    def get_template_statistics_for_service(self, service_id, limit_days=None):
+    def get_template_statistics_for_service(self, service_id, limit_days=None) -> List[TemplateStatistics]:
         params = {}
         if limit_days is not None:
             params["limit_days"] = limit_days

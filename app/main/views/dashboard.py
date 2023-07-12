@@ -30,6 +30,7 @@ from app.models.enum.bounce_rate_status import BounceRateStatus
 from app.models.enum.notification_statuses import NotificationStatuses
 from app.models.enum.template_types import TemplateType
 from app.statistics_utils import add_rate_to_job, get_formatted_percentage
+from app.types import ServiceStatisticsSimple, ServiceStatistics, TemplateStatistics, StatisticsSimple, Statistics
 from app.utils import (
     DELIVERED_STATUSES,
     FAILURE_STATUSES,
@@ -207,7 +208,7 @@ def monthly(service_id):
     )
 
 
-def filter_out_cancelled_stats(template_statistics):
+def filter_out_cancelled_stats(template_statistics: list[TemplateStatistics]):
     return [s for s in template_statistics if s["status"] != "cancelled"]
 
 
@@ -233,11 +234,12 @@ def aggregate_template_usage(template_statistics, sort_key="count"):
     return sorted(templates, key=lambda x: x[sort_key], reverse=True)
 
 
-def aggregate_notifications_stats(template_statistics):
+def aggregate_notifications_stats(template_statistics: list[TemplateStatistics]) -> ServiceStatisticsSimple:
     template_statistics = filter_out_cancelled_stats(template_statistics)
-    notifications = {
-        template_type: {status: 0 for status in ("requested", "delivered", "failed")}
-        for template_type in ["sms", "email", "letter"]
+    notifications: ServiceStatisticsSimple = {
+        "sms": {"requested": 0, "delivered": 0, "failed": 0},
+        "email": {"requested": 0, "delivered": 0, "failed": 0},
+        "letter": {"requested": 0, "delivered": 0, "failed": 0}
     }
     for stat in template_statistics:
         notifications[stat["template_type"]]["requested"] += stat["count"]
@@ -369,12 +371,22 @@ def calculate_bounce_rate(all_statistics_daily, dashboard_totals_daily):
     return bounce_rate
 
 
-def get_dashboard_totals(statistics):
-    for msg_type in statistics.values():
-        msg_type["failed_percentage"] = get_formatted_percentage(msg_type["failed"], msg_type["requested"])
-        msg_type["show_warning"] = float(msg_type["failed_percentage"]) > 3
-    return statistics
+def add_to_stats(simple_stats: StatisticsSimple) -> Statistics:
+    failed_percentage = get_formatted_percentage(simple_stats["failed"], simple_stats["requested"])
+    return {
+        **simple_stats,
+        "failed_percentage": failed_percentage,
+        "show_warning": float(failed_percentage) > 3,
+    }
 
+
+def get_dashboard_totals(statistics: ServiceStatisticsSimple) -> ServiceStatistics:
+    return {
+        "sms": add_to_stats(statistics["sms"]),
+        "email": add_to_stats(statistics["email"]),
+        "letter": add_to_stats(statistics["letter"]),
+    }
+    
 
 def calculate_usage(usage, free_sms_fragment_limit):
     sms_breakdowns = [breakdown for breakdown in usage if breakdown["notification_type"] == "sms"]
