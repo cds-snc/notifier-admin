@@ -17,6 +17,7 @@
 		"python.pythonPath": "/usr/local/bin/python",
 	},
 	"extensions": [
+		"ms-vscode.makefile-tools",
 		"njpwerner.autodocstring",
 		"github.copilot",
 		"GitHub.copilot-labs",
