@@ -27,3 +27,36 @@ def styleguide():
     template = Template({"content": sms})
 
     return render_template("views/styleguide.html", form=form, template=template)
+
+
+@main.route("/_rte")
+def rte():
+    template = {
+        "id": "fable_test",
+        "data": """# 🚀 Get started with our platform
+
+Are you ready to revolutionize government processes? Introducing your all-in-one platform for streamlined government services. We understand the unique challenges faced by public institutions, and our platform is here to empower your agency with innovative solutions.
+
+***
+
+## 🌐 What our platform Offers
+
+- **Centralized Citizen Services**: Simplify citizen engagement with a centralized platform for information, applications, and feedback.
+- **Effortless Collaboration**: Foster seamless communication and collaboration among government departments to enhance overall efficiency.
+- **Data Security**: Rest easy knowing that your sensitive data is protected by state-of-the-art security features.
+
+***
+
+## 📚 Learn more
+
+To get started working with your team:
+
+- Register an account
+- Create your team
+- Invite your teammates
+
+Visit [our website](https://www.example.com) to learn more
+""",
+    }
+
+    return render_template("views/rte.html", template=template)

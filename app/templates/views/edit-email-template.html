@@ -5,6 +5,7 @@
 {% from "components/radios.html" import radios %}
 {% from "components/form.html" import form_wrapper %}
 {% from "components/task-shortcut.html" import task_shortcut %}
+{% from "components/rich-text-editor.html" import rich_text_editor %}
 
 {% block service_page_title %}
   {{ heading }}
@@ -49,8 +50,9 @@
 
       {{ textbox(form.subject, width='w-full', highlight_tags=True, rows=2, hint=_("Tell recipients what the email is about. Try to use less than 10 words.")) }}
 
-      {{ textbox(form.template_content, highlight_tags=True, width='w-full', rows=8 ) }}
-
+      <!-- {{ textbox(form.template_content, highlight_tags=True, width='w-full', rows=8 ) }} -->
+      
+      {{ rich_text_editor(form.template_content)}}
       {% if current_user.platform_admin %}
         {{ radios(form.process_type, hint=_('This is only manageable by platform admins')) }}
       {% endif %}

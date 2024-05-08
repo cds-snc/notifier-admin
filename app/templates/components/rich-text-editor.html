@@ -1,0 +1,6 @@
+{% macro rich_text_editor(
+  field
+) %}
+  <div id="root_{{field.id}}"></div>  
+  <script src="/static/javascripts/lexical.min.js" data-id={{field.id}} data-content="{{field.data}}"></script>
+{% endmacro %}

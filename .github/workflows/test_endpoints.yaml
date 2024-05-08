@@ -1,4 +1,4 @@
-on: push
+on: 
 name: test endpoints
 jobs:
   test:

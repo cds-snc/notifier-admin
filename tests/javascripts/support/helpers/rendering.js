@@ -9,7 +9,7 @@ function getDescriptorForProperty (prop, obj) {
   const descriptors = Object.getOwnPropertyDescriptors(obj);
   const prototype = Object.getPrototypeOf(obj);
 
-  if ((descriptors !== {}) && (prop in descriptors)) {
+  if ((prop in descriptors)) {
     return descriptors[prop];
   }
 

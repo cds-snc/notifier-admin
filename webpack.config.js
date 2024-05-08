@@ -17,6 +17,9 @@ module.exports = {
         type: 'window',
       },
     },
+    lexical: {
+      import: './app/assets/javascripts/lexical/index.js',
+    }
   },
   watch: false,
   output: {
@@ -52,7 +55,19 @@ module.exports = {
           "postcss-loader"
         ]
       },
-      { test: /\.(png|svg|jpg|gif|ico)$/, use: ["file-loader"] },
+      { 
+        test: /\.(png|svg|jpg|gif|ico)$/, 
+        use: [
+          {
+            loader: 'file-loader', 
+            options: {
+              name: '[name].[ext]',
+              outputPath: 'images/lexical',
+              esModule: false,
+            },
+          },
+        ],
+      },
       {
         test: /.(js|jsx)$/,
         include: [path.resolve(__dirname, "app/assets/javascripts")],
@@ -70,6 +85,14 @@ module.exports = {
           ]
         }
       },
+      {
+        test: /.(ts|tsx)$/,
+        use: 'ts-loader',
+        exclude: /node_modules/,
+      },
     ]
   },
+  resolve: {
+    extensions: ['.ts', '.js', '.json', '.tsx']
+  }
 };

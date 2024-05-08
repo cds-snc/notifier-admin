@@ -1,0 +1,49 @@
+{% extends "admin_template.html" %}
+
+{% from "components/rich-text-editor.html" import rich_text_editor %}
+
+{% block per_page_title %}
+  Edit your template
+{% endblock %}
+
+{% block maincolumn_content %}
+
+<h2 class="heading-large">Edit your template</h2>
+
+<div class="email-message mb-12">
+  <table class="email-message-meta mb-12 leading-tight font-normal border border-solid border-gray-grey2">
+    <tbody>
+
+
+      <tr>
+        <th class="email-message-table pl-doubleGutter text-gray-grey1" scope="row">From</th>
+        <td class="email-message-table">
+          test@example.com
+        </td>
+      </tr>
+
+
+      <tr>
+        <th class="email-message-table pl-doubleGutter text-gray-grey1" scope="row">To</th>
+        <td class="email-message-table">
+          <span class="placeholder-no-brackets">email address</span>
+        </td>
+      </tr>
+
+      <tr class="email-message-meta m-0 text-smaller leading-tight font-normal">
+        <th class="email-message-table pl-doubleGutter text-gray-grey1" scope="row">Subject</th>
+        <td class="email-message-table">
+          Getting started with our new platform
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div>
+    <div>
+      <h3 class="heading-medium">Template content</h3>
+      {{ rich_text_editor(template) }}
+    </div>
+  </div>
+</div>
+{% endblock %}

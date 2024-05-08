@@ -31,6 +31,38 @@ const paths = {
 // 3. TASKS
 // - - - - - - - - - - - - - - -
 
+// Build icon library and minify it
+
+// const icons = () => {
+//   return src(paths.src + "fontawesome/js/solid.js")
+//     .pipe(
+//       plugins.faMinify({
+//         fas: [
+//           "plus",
+//           "arrow-right",
+//           "angle-down",
+//           "arrow-up-right-from-square",
+//           "circle-question",
+//           "triangle-exclamation",
+//           "circle-exclamation",
+//           "bold",
+//           "italic",
+//           "list-ol",
+//           "list-ul",
+//           "heading",
+//           "1",
+//           "2",
+//           "3",
+//           "link",
+//           "pencil"
+//         ],
+//       })
+//     )
+//     .pipe(plugins.uglify())
+//     .pipe(plugins.rename({ suffix: ".min" }))
+//     .pipe(dest(paths.dist + "javascripts/"));
+// };
+
 // Move GOV.UK template resources
 
 const javascripts = () => {
@@ -96,6 +128,20 @@ const javascripts = () => {
     .pipe(dest(paths.dist + "javascripts/"));
 };
 
+const lexical = () => {
+  return src([
+    paths.src + "javascripts/lexical.min.js",
+  ])
+    .pipe(plugins.prettyerror())
+    .pipe(
+      plugins.babel({
+        presets: ["@babel/react"],
+      })
+    )
+    .pipe(plugins.uglify())
+    .pipe(dest(paths.dist + "javascripts/"));
+};
+
 // copy static css
 const static_css = () => {
   return src(paths.src + "/stylesheets/index.css")
@@ -141,6 +187,8 @@ const defaultTask = parallel(
   series(images),
   series(static_css),
   series(javascripts),
+  series(lexical),
+  series(icons)
 );
 
 // Watch for changes and re-run tasks
