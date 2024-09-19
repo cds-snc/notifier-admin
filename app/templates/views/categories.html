@@ -1,0 +1,60 @@
+{% extends "admin_template.html" %}
+{% from "components/textbox.html" import textbox %}
+{% from "components/page-header.html" import page_header %}
+{% from "components/page-footer.html" import sticky_page_footer %}
+{% from "components/radios.html" import radios %}
+{% from "components/select-input.html" import select %}
+{% from "components/form.html" import form_wrapper %}
+{% from "components/task-shortcut.html" import task_shortcut %}
+{% from "components/template-category.html" import template_category %}
+
+{% block service_page_title %}
+{{ heading }}
+{% endblock %}
+
+{% block maincolumn_content %}
+{{ page_header(heading) }}
+{% call form_wrapper() %}
+
+<div class="grid-row contain-floats">
+    <div class="md:w-2/3 px-gutterHalf">
+
+        {% if config["FF_TEMPLATE_CATEGORY"] %}
+        <h2 class="heading-medium">{{ _('Template category') }}</h2>
+        {% call template_category(form.template_category_id, true if template_category_mode == 'expand' else false) %}
+        {{ select(form.template_category_id, hint=_('Template categories help improve delivery of your messages'),
+        option_hints=template_category_hints, option_conditionals=other_category, testid="template-categories",
+        use_aria_labelledby=false) }}
+        {% endcall %}
+        {% endif %}
+        {{ sticky_page_footer(_('Save')) }}
+    </div>
+</div>
+{% endcall %}
+{% endblock %}
+
+{% block page_script %}
+{{ super() }}
+<script type="text/javascript" nonce="{{ request_nonce }}">
+    const loadContent = templateId => {
+        const callback = `/services/templates/${templateId}/get-data`;
+
+        // $("#template_content").val("{{ _('loading...')}}");
+        const loading_text = '{{ _("loading...") }}';
+        $("#template_content").val(loading_text);
+
+        $.ajax({
+            url: callback,
+            type: "post",
+            headers: {
+                "X-CSRFToken": "{{ csrf_token() }}"
+            },
+            dataType: "json",
+            success: function (data) {
+                $("#template_content").val(data.result.content);
+            }
+        });
+    };
+</script>
+
+{% endblock %}
