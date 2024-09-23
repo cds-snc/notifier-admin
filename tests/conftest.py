@@ -3735,6 +3735,14 @@ def mock_get_empty_service_callback_api(mocker):
 
 
 @pytest.fixture(scope="function")
+def mock_validate_callback_url(mocker):
+    return mocker.patch(
+        "app.main.validators.requests.post",
+        return_value=Mock(content="a", status_code=200, headers={"a": "a"}, elapsed=timedelta(seconds=0.3)),
+    )
+
+
+@pytest.fixture(scope="function")
 def mock_create_service_inbound_api(mocker):
     def _create_service_inbound_api(service_id, url, bearer_token, user_id):
         return

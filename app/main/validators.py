@@ -2,7 +2,9 @@ import re
 import time
 
 import pwnedpasswords
-from flask import current_app
+import requests
+import validators
+from flask import current_app, g
 from flask_babel import _
 from flask_babel import lazy_gettext as _l
 from notifications_utils.field import Field
@@ -11,7 +13,7 @@ from notifications_utils.sanitise_text import SanitiseSMS
 from wtforms import ValidationError
 from wtforms.validators import Email
 
-from app import formatted_list, service_api_client
+from app import current_service, formatted_list, service_api_client
 from app.main._blocked_passwords import blocked_passwords
 from app.utils import Spreadsheet, email_safe, email_safe_name, is_gov_user
 
@@ -25,7 +27,8 @@ class Blocklist:
     def __call__(self, form, field):
         if current_app.config.get("HIPB_ENABLED", None):
             hibp_bad_password_found = False
-            for i in range(0, 3):  # Try 3 times. If the HIPB API is down then fall back to the old banlist.
+            # Try 3 times. If the HIPB API is down then fall back to the old banlist.
+            for i in range(0, 3):
                 try:
                     response = pwnedpasswords.check(field.data)
                     if response > 0:
@@ -139,6 +142,57 @@ class DoesNotStartWithDoubleZero:
     def __call__(self, form, field):
         if field.data and field.data.startswith("00"):
             raise ValidationError(self.message)
+
+
+class ValidCallbackUrl:
+    def __init__(self, message="Enter a URL that starts with https://"):
+        self.message = message
+
+    def __call__(self, form, field):
+        if field.data:
+            validate_callback_url(field.data, form.bearer_token.data)
+
+
+def validate_callback_url(service_callback_url, bearer_token):
+    """Validates a callback URL, checking that it is https and by sending a POST request to the URL with a health_check parameter.
+    4xx responses are considered invalid. 5xx responses are considered valid as it indicates there is at least a service running
+    at the URL, and we are sending a payload that the service will not understand.
+
+    Args:
+        service_callback_url (str): The url to validate.
+        bearer_token (str): The bearer token to use in the request, specified by the user requesting callbacks.
+
+    Raises:
+        ValidationError: If the URL is not HTTPS or the http response is 4xx.
+    """
+    if not validators.url(service_callback_url):
+        current_app.logger.warning(
+            f"Unable to create callback for service: {current_service.id}. Error: Invalid callback URL format: URL: {service_callback_url}"
+        )
+        raise ValidationError(_l("Enter a URL that starts with https://"))
+
+    try:
+        response = requests.post(
+            url=service_callback_url,
+            allow_redirects=True,
+            data={"health_check": "true"},
+            headers={"Content-Type": "application/json", "Authorization": f"Bearer {bearer_token}"},
+            timeout=2,
+        )
+
+        g.callback_response_time = response.elapsed.total_seconds()
+
+        if response.status_code < 500 and response.status_code >= 400:
+            current_app.logger.warning(
+                f"Unable to create callback for service: {current_service.id} Error: Callback URL not reachable URL: {service_callback_url}"
+            )
+            raise ValidationError(_l("Check your service is running and not using a proxy we cannot access"))
+
+    except requests.RequestException as e:
+        current_app.logger.warning(
+            f"Unable to create callback for service: {current_service.id} Error: Callback URL not reachable URL: {service_callback_url} Exception: {e}"
+        )
+        raise ValidationError(_l("Check your service is running and not using a proxy we cannot access"))
 
 
 def validate_email_from(form, field):

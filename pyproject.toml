@@ -60,6 +60,7 @@ itsdangerous = "2.2.0"  # pyup: <1.0.0
 newrelic = "8.10.0" # Pinned to 8.10.0 for now, 8.11.0 caused a performance regression: https://gcdigital.slack.com/archives/C012W5K734Y/p1709668046344929
 aws-xray-sdk = "^2.14.0"
 
+validators = "^0.28.3"
 
 [tool.poetry.group.test.dependencies]
 pytest = "7.4.4"
@@ -212,7 +213,7 @@ args = { port = { options = ["--port", "-p"], default = "6012"}, host = { option
 [tool.poe.tasks.format]
 help = "Formats the python code with isort, black, and flake8, and checks typing with mypy and formats the JS code with prettier."
 shell = """
-    isort ./app ./tests
+  isort ./app ./tests
 	black ./app ./tests
 	flake8 ./app ./tests
 	isort --check-only ./app ./tests

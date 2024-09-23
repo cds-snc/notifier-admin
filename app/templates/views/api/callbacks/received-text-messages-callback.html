@@ -1,7 +1,7 @@
 {% extends "admin_template.html" %}
 {% from "components/textbox.html" import textbox %}
 {% from "components/page-header.html" import page_header %}
-{% from "components/page-footer.html" import page_footer %}
+{% from "components/page-footer.html" import sticky_page_footer_two_submit_buttons_and_delete_link %}
 {% from "components/form.html" import form_wrapper %}
 
 {% block service_page_title %}
@@ -18,13 +18,16 @@
       <p>
         {{ _('When you receive a text message in GC Notify, we can forward it to your system. Learn more in the') }} <a href="{{ documentation_url('callbacks') }}"> {{ _('callbacks documentation') }} </a>.
       </p>
-      {% set hint_txt = _('Must start with https://') %}
+
       {% call form_wrapper() %}
         {{ textbox(
           form.url,
           width='w-full',
-          hint=hint_txt
+          hint=hint_text
         ) }}
+        <h2 class="heading-small">
+          {{ _('Add a secret value for authentication') }}
+       </h2>
         {% set hint_txt = _('At least 10 characters') %}
         {{ textbox(
           form.bearer_token,
@@ -32,8 +35,19 @@
           hint=hint_txt,
           autocomplete='new-password'
         ) }}
-        {% set button_txt = _('Save') %}
-        {{ page_footer(button_txt) }}
+        {% set test_response_txt = _('Test response time')  if has_callback_config else None %}
+        {% set test_response_value = _('test_response_time') if has_callback_config else None %}
+        {% set display_footer = is_deleting if is_deleting else False %}
+        {% if not display_footer %}
+          {{ sticky_page_footer_two_submit_buttons_and_delete_link(
+            button1_text=_('Save'),
+            button1_value=_('save'),
+            button2_text=test_response_txt,
+            button2_value=test_response_value,
+            delete_link=url_for('.delete_received_text_messages_callback', service_id=current_service.id),
+            delete_link_text=_('Delete')
+          ) }}
+        {% endif %}
       {% endcall %}
     </div>
   </div>

@@ -15,6 +15,8 @@ import ServiceSettingsPage from "./ServiceSettingsPage";
 import TemplateFiltersPage from "./TemplateFiltersPage";
 import TemplateCategoriesPage from "./admin/TemplateCategoriesPage";
 import ManageTemplateCategoryPage from "./admin/ManageTemplateCategoryPage";
+import CallbacksPage from "./CallbacksPage";
+import ApiIntegrationPage from "./ApiIntegrationPage";
 
 export default {
     LoginPage,
@@ -34,4 +36,6 @@ export default {
     TemplateFiltersPage,
     TemplateCategoriesPage,
     ManageTemplateCategoryPage,
+    CallbacksPage,
+    ApiIntegrationPage,
 }

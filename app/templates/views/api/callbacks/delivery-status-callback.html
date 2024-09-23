@@ -1,8 +1,9 @@
 {% extends "admin_template.html" %}
 {% from "components/textbox.html" import textbox %}
 {% from "components/page-header.html" import page_header %}
-{% from "components/page-footer.html" import page_footer %}
+{% from "components/page-footer.html" import sticky_page_footer_two_submit_buttons_and_delete_link %}
 {% from "components/form.html" import form_wrapper %}
+{% from "components/ajax-block.html" import ajax_block %}
 
 {% block service_page_title %}
   {{ _('Callbacks for delivery receipts') }}
@@ -23,12 +24,12 @@
       <h2 class="heading-small">
         {{ _('Add an endpoint where GC Notify should send POST requests') }}
      </h2>
-      {% set hint_txt = _('Must start with https://') %}
       {% call form_wrapper() %}
         {{ textbox(
           form.url,
           width='w-full',
-          hint=hint_txt
+          hint=hint_text,
+          testid='url',
         ) }}
         <h2 class="heading-small">
           {{ _('Add a secret value for authentication') }}
@@ -38,12 +39,24 @@
           form.bearer_token,
           width='w-full',
           hint=hint_txt,
-          autocomplete='new-password'
+          autocomplete='new-password',
+          testid='bearer-token',
         ) }}
-        {% set button_txt = _('Save') %}
-        {{ page_footer(button_txt) }}
+        {% set test_response_txt = _('Test response time')  if has_callback_config else None %}
+        {% set test_response_value = _('test_response_time') if has_callback_config else None %}
+        {% set delete_link = url_for('.delete_delivery_status_callback', service_id=current_service.id) if has_callback_config else None %}
+        {% set display_footer = is_deleting if is_deleting else False %}
+        {% if not display_footer %}
+          {{ sticky_page_footer_two_submit_buttons_and_delete_link(
+            button1_text=_('Save'),
+            button1_value=_('save'),
+            button2_text=test_response_txt,
+            button2_value=test_response_value,
+            delete_link=delete_link,
+            delete_link_text=_('Delete')
+          ) }}
+        {% endif %}
       {% endcall %}
     </div>
   </div>
-
 {% endblock %}

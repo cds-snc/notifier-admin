@@ -58,6 +58,7 @@ run-dev:
 .PHONY: format
 format:
 	ruff check --select I --fix .
+	ruff check
 	ruff format .
 	mypy ./
 	npx prettier --write app/assets/javascripts app/assets/stylesheets tests_cypress/cypress/e2e

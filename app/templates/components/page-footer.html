@@ -67,3 +67,49 @@
     </div>
   </div>
 {% endmacro %}
+
+{% macro sticky_page_footer_two_submit_buttons_and_delete_link(
+  button1_text="b1",
+  button1_value="b1",
+  button2_text=None,
+  button2_value=None,
+  delete_link=False,
+  delete_link_text=_("Delete")) %}
+  <div class="js-stick-at-bottom-when-scrolling">
+    <div class="page-footer">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+      <button
+        data-button-id="btn1"
+        type="submit"
+        class="button text-base outline-none focus:shadow-outline"
+        name="button_pressed"
+        value="{{ button1_value }}"
+        data-testid="{{ button1_text.lower().replace(" ", '-') }}"
+      >
+        {{- button1_text -}}
+      </button>
+
+      {% if button2_text and button2_value %}
+        <button
+          data-button-id="btn2"
+          type="submit"
+          class="button button-secondary text-base outline-none focus:shadow-outline"
+          name="button_pressed"
+          value="{{ button2_value }}"
+          data-testid="{{ button2_text.lower().replace(" ", '-') }}"
+        >
+          {{- button2_text -}}
+        </button>
+      {% endif %}
+
+      {% if delete_link %}
+      <span
+        class="page-footer-delete-link {% if not button_text %}page-footer-delete-link-without-button{% endif %}"
+        data-testid="{{ delete_link_text.lower().replace(" ", '-') }}"
+      >
+        <a href="{{ delete_link }}">{{ delete_link_text }}</a>
+      </span>
+    {% endif %}
+    </div>
+  </div>
+{% endmacro %}

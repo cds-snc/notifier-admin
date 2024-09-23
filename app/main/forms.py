@@ -23,6 +23,7 @@ from wtforms import (
     SelectField,
     SelectMultipleField,
     StringField,
+    SubmitField,
     TextAreaField,
     ValidationError,
     validators,
@@ -49,6 +50,7 @@ from app.main.validators import (
     LettersNumbersAndFullStopsOnly,
     NoCommasInPlaceHolders,
     OnlySMSCharacters,
+    ValidCallbackUrl,
     ValidEmail,
     ValidGovEmail,
     validate_email_from,
@@ -342,7 +344,8 @@ class StripWhitespaceForm(Form):
             filters = [strip_whitespace] if not issubclass(unbound_field.field_class, no_filter_fields) else []
             filters += unbound_field.kwargs.get("filters", [])
             bound = unbound_field.bind(form=form, filters=filters, **options)
-            bound.get_form = weakref.ref(form)  # GC won't collect the form if we don't use a weakref
+            # GC won't collect the form if we don't use a weakref
+            bound.get_form = weakref.ref(form)
             return bound
 
 
@@ -1407,7 +1410,7 @@ class ServiceInboundNumberForm(StripWhitespaceForm):
 
 class CallbackForm(StripWhitespaceForm):
     def validate(self, extra_validators=None):
-        return super().validate(extra_validators) or self.url.data == ""
+        return super().validate(extra_validators)
 
 
 class ServiceReceiveMessagesCallbackForm(CallbackForm):
@@ -1415,7 +1418,8 @@ class ServiceReceiveMessagesCallbackForm(CallbackForm):
         "URL",
         validators=[
             DataRequired(message=_l("This cannot be empty")),
-            Regexp(regex="^https.*", message=_l("Must be a valid https URL")),
+            Regexp(regex="^https.*", message=_l("Enter a URL that starts with https://")),
+            ValidCallbackUrl(),
         ],
     )
     bearer_token = PasswordFieldShowHasContent(
@@ -1432,7 +1436,8 @@ class ServiceDeliveryStatusCallbackForm(CallbackForm):
         "URL",
         validators=[
             DataRequired(message=_l("This cannot be empty")),
-            Regexp(regex="^https.*", message=_l("Must be a valid https URL")),
+            Regexp(regex="^https.*", message=_l("Enter a URL that starts with https://")),
+            ValidCallbackUrl(),
         ],
     )
     bearer_token = PasswordFieldShowHasContent(
@@ -1442,6 +1447,7 @@ class ServiceDeliveryStatusCallbackForm(CallbackForm):
             Length(min=10, message=_l("Must be at least 10 characters")),
         ],
     )
+    test_response_time = SubmitField()
 
 
 class InternationalSMSForm(StripWhitespaceForm):
@@ -1885,7 +1891,8 @@ class BrandingPoolForm(StripWhitespaceForm):
 
     pool_branding = RadioField(
         _l("Select alternate logo"),
-        choices=[],  # Choices by default, override to get more refined options.
+        # Choices by default, override to get more refined options.
+        choices=[],
         validators=[DataRequired(message=_l("You must select an option to continue"))],
     )
 

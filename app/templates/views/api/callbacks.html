@@ -24,13 +24,13 @@
 	    {% call row() %}
 	      {{ text_field('Delivery receipts') }}
 	      {{ optional_text_field(delivery_status_callback, truncate=false) }}
-	      {{ edit_field('Change', url_for('.delivery_status_callback', service_id=current_service.id)) }}
+	      {{ edit_field('Change', url_for('.delivery_status_callback', service_id=current_service.id), attributes="data-testid='change-delivery-receipts'") }}
 	    {% endcall %}
 
 	    {% call row() %}
 	      {{ text_field('Received text messages') }}
           {{ optional_text_field(received_text_messages_callback, truncate=false) }}
-	   	  {{ edit_field('Change', url_for('.received_text_messages_callback', service_id=current_service.id)) }}
+	   	  {{ edit_field('Change', url_for('.received_text_messages_callback', service_id=current_service.id), attributes="data-testid='change-received-text-messages'") }}
 	    {% endcall %}
 	  {% endcall %}
 	</div>

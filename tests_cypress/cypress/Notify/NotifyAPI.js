@@ -2,6 +2,8 @@ import config from "../../config";
 import { customAlphabet } from "nanoid";
 
 const BASE_URL = config.Hostnames.API
+const CYPRESS_SERVICE_ID = config.Services.Cypress
+const NOTIFY_USER_ID = Cypress.env("NOTIFY_USER_ID");
 
 const Utilities = {
     CreateJWT: () => {
@@ -17,6 +19,16 @@ const Utilities = {
     GenerateID: (length = 10) => {
         const nanoid = customAlphabet('1234567890abcdef-_', length)
         return nanoid()
+    },
+    CreateCacheClearJWT: () => {
+        const jwt = require('jsrsasign');
+        const claims = {
+            'iss': Cypress.env('CACHE_CLEAR_USER_NAME'),
+            'iat': Math.round(Date.now() / 1000)
+        }
+
+        const headers = { alg: "HS256", typ: "JWT" };
+        return jwt.jws.JWS.sign("HS256", JSON.stringify(headers), JSON.stringify(claims), Cypress.env('CACHE_CLEAR_CLIENT_SECRET'));
     }
 };
 const Admin = {
@@ -204,8 +216,80 @@ const Admin = {
                 Authorization: `Bearer ${token}`,
                 "Content-Type": 'application/json'
             }
-        })
-    }
+        });
+    },
+    CreateDeliveryReceiptCallback: ({ id, url, bearerToken, serviceId=CYPRESS_SERVICE_ID }) => {
+        var token = Utilities.CreateJWT();
+        return cy.request({
+            url: `${BASE_URL}/service/${serviceId}/delivery-receipt-api`,
+            method: 'POST',
+            headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": 'application/json'
+            },
+            body: {
+                id: id,
+                url: url,
+                bearer_token: bearerToken,
+                updated_by_id: NOTIFY_USER_ID
+            }
+        });
+    },
+    CreateReceivedTextMessagesCallback: ({ id, url, bearerToken, serviceId }) => {
+        var token = Utilities.CreateJWT();
+        return cy.request({
+            url: `${BASE_URL}/service/${serviceId}/inbound-api`,
+            method: 'POST',
+            headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": 'application/json'
+            },
+            body: {
+                id: id,
+                url: url,
+                bearer_token: bearerToken,
+                updated_by_id: NOTIFY_USER_ID
+            }
+        });
+    },
+    DeleteReceivedTextMessagesCallback: ({ serviceId, inboundApiId }) => {
+        var token = Utilities.CreateJWT();
+        return cy.request({
+            url: `${BASE_URL}/service/${serviceId}/inbound-api/${inboundApiId}`,
+            method: 'DELETE',
+            failOnStatusCode: false,
+            headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": 'application/json'
+            },
+        });
+    },
+    DeleteDeliveryReceiptCallback: ({ serviceId, callbackApiId }) => {
+        var token = Utilities.CreateJWT();
+        return cy.request({
+            url: `${BASE_URL}/service/${serviceId}/delivery-receipt-api/cleanup/${callbackApiId}`,
+            method: 'DELETE',
+            failOnStatusCode: false,
+            headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": 'application/json'
+            },
+        });
+    },
+    ClearCache: ({ pattern }) => {
+        var token = Utilities.CreateCacheClearJWT();
+        return cy.request({
+            url: `${BASE_URL}/cache-clear`,
+            method: 'POST',
+            headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": 'application/json'
+            },
+            body: {
+                pattern: pattern
+            }
+        });
+    },
 }
 // const Admin = {
 //     CreateService: () => {
