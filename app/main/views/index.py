@@ -262,7 +262,16 @@ def features_letters():
 
 @main.route("/welcome", endpoint="welcome")
 def welcome():
-    return render_template("views/welcome.html", default_limit=current_app.config["DEFAULT_SERVICE_LIMIT"])
+    # fake a form field
+    class FakeFormField(object):
+        pass
+
+    template_content = FakeFormField()
+    template_content.id = "testing"
+
+    return render_template(
+        "views/welcome.html", default_limit=current_app.config["DEFAULT_SERVICE_LIMIT"], template_content=template_content
+    )
 
 
 # TODO: refactor this out into a decorator

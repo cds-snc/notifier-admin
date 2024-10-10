@@ -6,6 +6,7 @@
 {% from "components/select-input.html" import select %}
 {% from "components/form.html" import form_wrapper %}
 {% from "components/task-shortcut.html" import task_shortcut %}
+{% from "components/rich-text-editor.html" import rich_text_editor %}
 {% from "components/template-category.html" import template_category %}
 
 {% block service_page_title %}
@@ -51,7 +52,9 @@
 
       {{ textbox(form.subject, width='w-full', highlight_tags=True, rows=2, hint=_("Tell recipients what the email is about. Try to use less than 10 words.", testid="template-subject")) }}
 
-      {{ textbox(form.template_content, highlight_tags=True, width='w-full', rows=8, testid="template-content" ) }}
+            
+      {{ rich_text_editor(form.template_content)}}
+      <!-- {{ textbox(form.template_content, highlight_tags=True, width='w-full', rows=8, testid="template-content" ) }} -->
 
       <h2 class="heading-medium">{{ _('Template category') }}</h2>
       {% call template_category(form.template_category_id, true if template_category_mode == 'expand' else false) %}

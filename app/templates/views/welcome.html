@@ -1,3 +1,5 @@
+{% from "components/rich-text-editor.html" import rich_text_editor %}
+
 {% extends  "admin_template.html" %}
 
 {% block per_page_title %}
@@ -18,4 +20,5 @@
         <a href="{{ url_for('main.add_service', first='first') }}" class="mt-4 button">{{ _('Create your first service') }}</a>
     </div>
 
+    {{ rich_text_editor(template_content) }}
 {% endblock %}

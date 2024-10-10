@@ -16,7 +16,7 @@ plugins.faMinify = require("gulp-fa-minify");
 plugins.jshint = require("gulp-jshint");
 plugins.prettyerror = require("gulp-prettyerror");
 plugins.rename = require("gulp-rename");
-//plugins.uglify = require("gulp-uglify");
+plugins.uglify = require("gulp-uglify");
 
 // 2. CONFIGURATION
 // - - - - - - - - - - - - - - -
@@ -101,6 +101,20 @@ const javascripts = () => {
     .pipe(dest(paths.dist + "javascripts/"));
 };
 
+const lexical = () => {
+  return src([
+    paths.src + "javascripts/lexical.min.js",
+  ])
+    .pipe(plugins.prettyerror())
+    .pipe(
+      plugins.babel({
+        presets: ["@babel/react"],
+      })
+    )
+    .pipe(plugins.uglify())
+    .pipe(dest(paths.dist + "javascripts/"));
+};
+
 // copy static css
 const static_css = () => {
   return src(paths.src + "/stylesheets/index.css")
@@ -146,6 +160,8 @@ const defaultTask = parallel(
   series(javascripts),
   series(images),
   series(static_css),
+  series(javascripts),
+  series(lexical)
 );
 
 // Watch for changes and re-run tasks

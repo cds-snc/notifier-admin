@@ -237,6 +237,12 @@ redis-server
 
 There are testing utilities available through the project.
 
+### Feature flags
+
+When developing new features, it is often useful to hide them behind a feature flag. This allows you to test the feature in a live environment without exposing it to all users. To create a feature flag, add a new key starting with `FF_` to the `.env` file.
+
+The state of the various feature flags for staging and prod should be tracked within the `Test` and `ProductionFF` sections of `config.py`. This allows our CI workflows to run tests in both configurations to avoid regression issues in either environment.
+
 ### Trigger an exception on purpose
 
 It is sometimes useful to trigger an exception for testing purposes (logger format,
