@@ -55,6 +55,7 @@
 @import "./toolkit/wp.css";
 
 /*! purgecss start ignore */
+@import "../fa-svg-with-js.css";
 @-ms-viewport {
   width: device-width;
 }

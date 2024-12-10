@@ -1,6 +1,7 @@
-const cssnano = require("cssnano");
+console.log("Recompiling CSS...");
+console.time("CSS recompilation time:");
 
-console.log("=== POST CSS  ===");
+const cssnano = require("cssnano");
 
 const purgecss = require("@fullhuman/postcss-purgecss")({
   content: ["./app/**/*.html", "./app/assets/javascripts/*.js"],
@@ -55,3 +56,5 @@ module.exports = {
     purgecss,
   ],
 };
+
+console.timeEnd("CSS recompilation time:");
