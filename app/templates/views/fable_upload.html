@@ -1,0 +1,24 @@
+{% extends  "admin_template.html" %}
+
+{% from "components/file-upload.html" import file_upload %}
+{% from "components/page-header.html" import govuk_back_link, page_header %}
+
+
+{% block per_page_title %}
+  Fable upload component test
+{% endblock %}
+
+{% block maincolumn_content %}
+
+  
+
+  <h2 class="heading-large">Fable upload component test</h2>
+  {% if not uploaded %}
+    {{ file_upload(form.file_upload) }}
+  {% else %}
+    {{ govuk_back_link(back_link) }}
+    <div class="banner-default-with-tick" role="status">
+      '{{ form.data.file_upload.filename }}' was uploaded.    
+    </div>
+  {% endif %}
+{% endblock %}
