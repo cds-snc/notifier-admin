@@ -16,7 +16,7 @@ describe("Sign out", () => {
 
   it("Redirects to session timeout page when logged in (multiple pages)", () => {
     ["/home", "/features"].forEach((page) => {
-      cy.login(Cypress.env("NOTIFY_USER"), Cypress.env("NOTIFY_PASSWORD"));
+      cy.login();
       vistPageAndFastForwardTime(page);
 
       // asserts

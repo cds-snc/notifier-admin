@@ -9,13 +9,18 @@ const types = {
 };
 
 const categories = {
-  en: ["Test"],
-  fr: ["Test"],
+  en: ["Other"],
+  fr: ["Autre"],
+};
+
+const catEmpty = {
+  en: "Test",
+  fr: "Test",
 };
 
 describe("Template filters", () => {
   beforeEach(() => {
-    cy.login(Cypress.env("NOTIFY_USER"), Cypress.env("NOTIFY_PASSWORD"));
+    cy.login();
   });
 
   ["en", "fr"].forEach((lang) => {
@@ -162,7 +167,7 @@ describe("Template filters", () => {
 
         Page.ToggleFilters();
         Page.ApplyTypeFilter(types[lang][1]);
-        Page.ApplyCategoryFilter(categories[lang][0]);
+        Page.ApplyCategoryFilter(catEmpty[lang]);
 
         // Empty state should be visible
         Page.Components.EmptyState().should("be.visible");

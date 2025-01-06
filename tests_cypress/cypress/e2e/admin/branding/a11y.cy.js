@@ -13,7 +13,7 @@ describe("Branding A11Y", () => {
     // stop the recurring dashboard fetch requests
     cy.intercept("GET", "**/dashboard.json", {});
 
-    cy.login(Cypress.env("NOTIFY_USER"), Cypress.env("NOTIFY_PASSWORD"));
+    cy.login();
   });
 
   // perform a11yScan on all pages in the branding_pages array

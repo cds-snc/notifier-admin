@@ -134,7 +134,7 @@ describe("Mobile menu", () => {
   });
 
   it("Re-focus on the menu button when the menu closes (signed in)", () => {
-    cy.login(Cypress.env("NOTIFY_USER"), Cypress.env("NOTIFY_PASSWORD"));
+    cy.login();
 
     cy.visit("/");
     MainMenu.OpenMenu();

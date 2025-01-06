@@ -19,7 +19,7 @@ let Actions = {
     },
     Login: (email, password, agreeToTerms=true) => {
         cy.clearCookie(ADMIN_COOKIE); // clear auth cookie
-        cy.task('deleteAllEmails'); // purge email inbox to make getting the 2fa code easier
+        // cy.task('deleteAllEmails'); // purge email inbox to make getting the 2fa code easier
 
         // login with username and password
         cy.visit(LoginPage.URL);
@@ -29,7 +29,7 @@ let Actions = {
 
         // get email 2fa code
         recurse(
-            () => cy.task('getLastEmail', {} ), // Cypress commands to retry
+            () => cy.task('getLastEmail', email), // Cypress commands to retry
             Cypress._.isObject, // keep retrying until the task returns an object
             {
                 log: true,

@@ -82,7 +82,7 @@ const pages = [
 describe(`A11Y - App pages [${config.CONFIG_NAME}]`, () => {
   for (const page of pages) {
     it(`${page.name}`, () => {
-      cy.login(Cypress.env("NOTIFY_USER"), Cypress.env("NOTIFY_PASSWORD"));
+      cy.login();
       cy.a11yScan(page.route, {
         a11y: true,
         htmlValidate: true,

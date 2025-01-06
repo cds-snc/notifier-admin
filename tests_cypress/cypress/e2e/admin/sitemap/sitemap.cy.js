@@ -54,7 +54,7 @@ describe(`Sitemap`, () => {
     });
 
     it("Does display the 'You' group when logged in", () => {
-      cy.login(Cypress.env("NOTIFY_USER"), Cypress.env("NOTIFY_PASSWORD"));
+      cy.login();
       cy.visit(path);
 
       cy.getByTestId("sitemap-group").contains("Your GC Notify");
@@ -75,13 +75,13 @@ describe(`Sitemap`, () => {
       cy.get('a[href="/sitemap"]').should("be.visible");
     });
     it("Has the sitemap link on app pages when logged in", () => {
-      cy.login(Cypress.env("NOTIFY_USER"), Cypress.env("NOTIFY_PASSWORD"));
+      cy.login();
       cy.visit("/activity");
 
       cy.get(`#${sitemap_footer_id}`).should("be.visible");
     });
     it("Has the sitemap link on GCA pages when logged in", () => {
-      cy.login(Cypress.env("NOTIFY_USER"), Cypress.env("NOTIFY_PASSWORD"));
+      cy.login();
       cy.visit("/features");
 
       cy.get('a[href="/sitemap"]').should("be.visible");

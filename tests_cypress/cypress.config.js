@@ -1,7 +1,8 @@
 var config = require('./config');
 
 const { defineConfig } = require("cypress");
-const EmailAccount = require("./cypress/plugins/email-account")
+const EmailAccount = require("./cypress/plugins/email-account");
+const CreateAccount = require("./cypress/plugins/create-account");
 const htmlvalidate = require("cypress-html-validate/plugin");
 
 module.exports = defineConfig({
@@ -28,8 +29,8 @@ module.exports = defineConfig({
           return null
         },
         // Email Account ///
-        getLastEmail() {
-          return emailAccount.getLastEmail()
+        getLastEmail(emailAddress) {
+          return emailAccount.getLastEmail(emailAddress)
         },
         deleteAllEmails() {
           return emailAccount.deleteAllEmails()
@@ -37,9 +38,18 @@ module.exports = defineConfig({
         fetchEmail(acct) {
           return emailAccount.fetchEmail(acct)
         },
-        createEmailAccount() {
-          return emailAccount.createEmailAccount();
+        createAccount({ baseUrl, username, secret }) {
+          if (global.acct) {
+            return global.acct;
+          } else {
+            let acct = CreateAccount(baseUrl, username, secret);
+            global.acct = acct;
+            return acct
+          }          
         },
+        getUserName() {
+          return global.acct;
+        }
       });
 
       on('before:browser:launch', (browser = {}, launchOptions) => {

@@ -1,7 +1,8 @@
 {
   "scripts": {
     "cypress": "ETHEREAL_CACHE=false npx cypress open",
-    "a11y": "ETHEREAL_CACHE=false npx cypress run --spec 'cypress/e2e/admin/a11y/*'"
+    "a11y": "ETHEREAL_CACHE=false npx cypress run --spec 'cypress/e2e/admin/a11y/*'",
+    "ci": "ETHEREAL_CACHE=false npx cypress run --spec 'cypress/e2e/admin/ci.cy.js'"
   },
   "dependencies": {
     "cypress-axe": "^1.4.0",

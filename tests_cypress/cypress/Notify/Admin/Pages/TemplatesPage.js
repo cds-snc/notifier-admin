@@ -39,6 +39,9 @@ let Actions = {
         cy.contains('a', template_name).first().click();
         cy.contains('h1', template_name).should('be.visible');
     },
+    SelectTemplateById: (service_id, template_id) => {
+        cy.get(`a[href="/services/${service_id}/templates/${template_id}"]`).click();
+    },
     GotoAddRecipients: () => {
         Components.YesAddRecipients().click();
         //cy.contains('h1', 'Add recipients').should('be.visible');

@@ -32,7 +32,7 @@ describe("Basic login", () => {
   });
 
   it("displays notify service page", () => {
-    cy.visit(`/services/${config.Services.Notify}`);
+    cy.visit(`/services/${config.Services.Cypress}`);
     cy.contains("h1", "Dashboard").should("be.visible");
   });
 });

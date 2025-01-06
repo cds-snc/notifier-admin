@@ -2,7 +2,7 @@ import TouPrompt from "../../Notify/Admin/Pages/TouPrompt";
 
 describe("TOU Prompt", () => {
   it("should display the prompt when logged in", () => {
-    cy.login(Cypress.env("NOTIFY_USER"), Cypress.env("NOTIFY_PASSWORD"), false);
+    cy.login(false);
     cy.visit("/");
 
     TouPrompt.Components.Prompt().should("be.visible");
@@ -11,7 +11,7 @@ describe("TOU Prompt", () => {
   });
 
   it("should not display the prompt after being dismissed", () => {
-    cy.login(Cypress.env("NOTIFY_USER"), Cypress.env("NOTIFY_PASSWORD"), false);
+    cy.login(false);
     cy.visit("/");
 
     TouPrompt.Components.Prompt().should("be.visible");
@@ -35,7 +35,7 @@ describe("TOU Prompt", () => {
     cy.visit("/security");
     TouPrompt.Components.Prompt().should("not.exist");
 
-    cy.login(Cypress.env("NOTIFY_USER"), Cypress.env("NOTIFY_PASSWORD"), false);
+    cy.login(false);
 
     cy.visit("/features");
     TouPrompt.Components.Prompt().should("not.exist");
@@ -45,7 +45,7 @@ describe("TOU Prompt", () => {
   });
 
   it("should display the prompt again when navigating to the page before prompt is dismissed", () => {
-    cy.login(Cypress.env("NOTIFY_USER"), Cypress.env("NOTIFY_PASSWORD"), false);
+    cy.login(false);
     cy.visit("/");
     TouPrompt.Components.Prompt().should("be.visible");
 

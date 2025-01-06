@@ -8,7 +8,7 @@ describe("Branding request", () => {
   beforeEach(() => {
     // stop the recurring dashboard fetch requests
     cy.intercept("GET", "**/dashboard.json", {});
-    cy.login(Cypress.env("NOTIFY_USER"), Cypress.env("NOTIFY_PASSWORD"));
+    cy.login();
     cy.visit(`/services/${config.Services.Cypress}/branding-request`);
   });
 

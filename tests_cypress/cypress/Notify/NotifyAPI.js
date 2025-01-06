@@ -15,7 +15,7 @@ const Utilities = {
         return jwt.jws.JWS.sign("HS256", JSON.stringify(headers), JSON.stringify(claims), Cypress.env('ADMIN_SECRET'));
     },
     GenerateID: (length = 10) => {
-        const nanoid = customAlphabet('1234567890abcdef-_', length)
+        const nanoid = customAlphabet('1234567890abcdef', length)
         return nanoid()
     }
 };
