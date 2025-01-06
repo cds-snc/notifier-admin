@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 from itertools import chain
 
 import pytz
-from flask import request
+from flask import current_app, request
 from flask_babel import lazy_gettext as _l
 from flask_wtf import FlaskForm as Form
 from flask_wtf.file import FileAllowed
@@ -39,10 +39,11 @@ from wtforms.validators import (
     Length,
     Optional,
     Regexp,
+    StopValidation,
 )
 from wtforms.widgets import CheckboxInput, ListWidget
 
-from app import format_thousands
+from app import current_service, format_thousands, format_thousands_localized
 from app.main.validators import (
     Blocklist,
     CsvFileValidator,
@@ -1811,46 +1812,129 @@ class GoLiveAboutServiceFormNoOrg(StripWhitespaceForm):
     )
 
 
-class GoLiveAboutNotificationsForm(GoLiveAboutServiceForm):
-    notification_types = MultiCheckboxField(
-        _l("Specify the type of notifications you plan on sending."),
-        choices=[
-            ("email", _l("Email")),
-            ("sms", _l("Text message")),
-        ],
+class OptionalIntegerRange:
+    def __init__(self, trigger_field, trigger_value, min=None, max=None, message=None):
+        self.trigger_field = trigger_field
+        self.trigger_value = trigger_value
+        self.min = min
+        self.max = max
+        self.message = message
+
+    def __call__(self, form, field):
+        trigger_data = getattr(form, self.trigger_field).data
+
+        # If trigger radio isn't selected, Stop Validation
+        if trigger_data != self.trigger_value:
+            field.process(formdata=None)  # Clear the field
+            field.errors = []  # Delete any errors
+            return StopValidation()  # Stop validation chain
+
+        # Only validate if the trigger condition is met
+        if trigger_data == self.trigger_value:
+            # First check if empty
+            if field.data is None or field.data == "":
+                raise ValidationError(self.message or _l("This cannot be empty"))
+                # Then check range if value is provided
+            if self.min is not None and field.data < self.min:
+                raise ValidationError(_l("Number must be more than {min}").format(min=format_thousands_localized(self.min)))
+            if self.max is not None and field.data > self.max:
+                raise ValidationError(_l("Number must be less than {max}").format(max=format_thousands_localized(self.max)))
+        else:
+            return True
+
+
+class BaseGoLiveAboutNotificationsForm:
+    def volume_choices(self, limit, notification_type):
+        return [
+            ("0", _l("None")),
+            ("within_limit", _l("1 to {}").format(format_thousands_localized(limit))),
+            (
+                "above_limit",
+                _l("{min} to {max}").format(
+                    min=format_thousands_localized(limit + 1), max=format_thousands_localized(limit * 10)
+                ),
+            ),
+            (f"more_{notification_type}", _l("More than {}").format(format_thousands_localized(limit * 10))),
+        ]
+
+    def volume_choices_restricted(self, limit):
+        return [
+            ("0", _l("None")),
+            ("within_limit", _l("1 to {}").format(format_thousands_localized(limit))),
+            ("above_limit", _l("More than {}").format(format_thousands_localized(limit))),
+        ]
+
+    def more_validators(self, limit, notification_type):
+        return [
+            OptionalIntegerRange(
+                trigger_field=f"daily_{notification_type}_volume",
+                trigger_value=f"more_{notification_type}",
+                min=limit * 10 + 1,  # +1 because we want the value to be greater than (and not equal to) the previous option
+            )
+        ]
+
+    daily_email_volume = RadioField(
+        _l("How many emails do you expect to send on a busy day?"),
         validators=[DataRequired()],
     )
-    expected_volume = RadioField(
-        _l("How many notifications do you plan on sending per month?"),
-        choices=[
-            ("1-1k", _l("1 to 1,000 notifications")),
-            ("1k-10k", _l("1,000 to 10,000 notifications")),
-            ("10k-100k", _l("10,000 to 100,000 notifications")),
-            ("100k+", _l("More than 100,000 notifications")),
-        ],
+    annual_email_volume = RadioField(
+        _l("How many emails do you expect to send in a year?"),
+        validators=[DataRequired()],
+    )
+    daily_sms_volume = RadioField(
+        _l("How many text messages do you expect to send on a busy day?"),
+        validators=[DataRequired()],
+    )
+    annual_sms_volume = RadioField(
+        _l("How many text messages do you expect to send in a year?"),
         validators=[DataRequired()],
     )
 
+    how_many_more_email = IntegerField(
+        label=_l("How many?"),
+        default="",
+    )
+    how_many_more_sms = IntegerField(
+        label=_l("How many?"),
+        default="",
+    )
 
-class GoLiveAboutNotificationsFormNoOrg(GoLiveAboutServiceFormNoOrg):
-    notification_types = MultiCheckboxField(
-        _l("Specify the type of notifications you plan on sending."),
-        choices=[
-            ("email", _l("Email")),
-            ("sms", _l("Text message")),
-        ],
-        validators=[DataRequired()],
-    )
-    expected_volume = RadioField(
-        _l("How many notifications do you plan on sending per month?"),
-        choices=[
-            ("1-1k", _l("1 to 1,000 notifications")),
-            ("1k-10k", _l("1,000 to 10,000 notifications")),
-            ("10k-100k", _l("10,000 to 100,000 notifications")),
-            ("100k+", _l("More than 100,000 notifications")),
-        ],
-        validators=[DataRequired()],
-    )
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # Choices for daily/annual emails
+        self.daily_email_volume.choices = self.volume_choices(
+            limit=current_app.config["DEFAULT_LIVE_SERVICE_LIMIT"], notification_type="email"
+        )
+        self.annual_email_volume.choices = self.volume_choices_restricted(limit=current_service.email_annual_limit)
+
+        # Choices for daily/annual sms
+        self.daily_sms_volume.choices = self.volume_choices(
+            limit=current_app.config["DEFAULT_LIVE_SMS_DAILY_LIMIT"], notification_type="sms"
+        )
+        self.annual_sms_volume.choices = self.volume_choices_restricted(limit=current_service.sms_annual_limit)
+
+        # Validators for daily emails/sms
+        self.how_many_more_email.validators = self.more_validators(
+            limit=current_app.config["DEFAULT_LIVE_SERVICE_LIMIT"], notification_type="email"
+        )
+        self.how_many_more_sms.validators = self.more_validators(
+            limit=current_app.config["DEFAULT_LIVE_SMS_DAILY_LIMIT"], notification_type="sms"
+        )
+
+    @property
+    def volume_conditionals(self):
+        return {"more_email": self.how_many_more_email, "more_sms": self.how_many_more_sms}
+
+
+class GoLiveAboutNotificationsForm(BaseGoLiveAboutNotificationsForm, GoLiveAboutServiceForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+
+class GoLiveAboutNotificationsFormNoOrg(BaseGoLiveAboutNotificationsForm, GoLiveAboutServiceFormNoOrg):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
 
 class BrandingGOCForm(StripWhitespaceForm):

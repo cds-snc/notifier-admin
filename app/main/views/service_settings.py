@@ -345,13 +345,16 @@ def send_go_live_request(service, user, go_live_data) -> None:
         "department_org_name",
         "intended_recipients",
         "main_use_case",
-        "notification_types",
-        "expected_volume",
         "support_type",
+        "daily_email_volume",
+        "annual_email_volume",
+        "daily_sms_volume",
+        "annual_sms_volume",
+        "how_many_more_email",
+        "how_many_more_sms",
     }
     data = {key: go_live_data[key] for key in of_interest if key in go_live_data}
     data["intended_recipients"] = ", ".join(data["intended_recipients"])
-    data["notification_types"] = ", ".join(data["notification_types"])
     user_api_client.send_contact_request(data)
 
 

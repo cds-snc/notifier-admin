@@ -2,7 +2,7 @@
 {% from "components/form.html" import form_wrapper %}
 {% from "components/page-header.html" import page_header %}
 {% from "components/page-footer.html" import page_footer %}
-{% from "components/radios.html" import radios %}
+{% from "components/select-input.html" import select %}
 {% from "components/textbox.html" import textbox %}
 {% from "components/checkbox.html" import checkboxes %}
 
@@ -38,8 +38,14 @@
         <p>
           {{ _("This information helps us set sending limits and budget accordingly.") }}
         </p>
-        {{ checkboxes(form.notification_types) }}
-        {{ radios(form.expected_volume) }}
+        <h2 class="heading-medium">{{ _("Emails") }}</h2>
+        {{ select(form.daily_email_volume, option_conditionals=form.volume_conditionals) }}
+        {{ select(form.annual_email_volume, option_conditionals=form.volume_conditionals) }}
+        
+        <h2 class="heading-medium">{{ _("Text messages") }}</h2>
+        {{ select(form.daily_sms_volume, option_conditionals=form.volume_conditionals) }}
+        {{ select(form.annual_sms_volume, option_conditionals=form.volume_conditionals) }}
+
 
         <!-- Coming from the previous step. If it's not included, checkboxes will be reset -->
         <div class="hidden">
