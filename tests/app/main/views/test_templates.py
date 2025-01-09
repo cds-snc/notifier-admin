@@ -717,7 +717,7 @@ def test_should_be_able_to_view_a_template_with_links(
             template_id=fake_uuid,
         ) in [a["href"] for a in links_in_page]
 
-    assert normalize_spaces(page.select_one("main p").text) == (permissions_warning_to_be_shown or "To: phone number")
+    assert normalize_spaces(page.select_one("main p").text) == (permissions_warning_to_be_shown or "To: ((phone number))")
 
 
 def test_should_show_template_id_on_template_page(

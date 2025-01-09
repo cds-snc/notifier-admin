@@ -3188,11 +3188,11 @@ def test_reply_to_is_previewed_if_chosen(
     [
         (
             "fr",
-            "De service one Répondre à test@example.com À adresse courriel Objet Template subject",
+            "De service one Répondre à test@example.com À ((adresse courriel)) Objet Template subject",
         ),
         (
             "en",
-            "From service one Reply to test@example.com To email address Subject Template subject",
+            "From service one Reply to test@example.com To ((email address)) Subject Template subject",
         ),
     ],
 )

@@ -491,6 +491,8 @@ def get_template(
     email_reply_to=None,
     sms_sender=None,
 ):
+    from app import get_current_locale
+
     # Local Jinja support - add USE_LOCAL_JINJA_TEMPLATES=True to .env
     # Add a folder to the project root called 'jinja_templates' with copies from notification-utls repo of:
     # 'email_preview_template.jinja2'
@@ -507,6 +509,7 @@ def get_template(
             reply_to=email_reply_to,
             jinja_path=debug_template_path,
             allow_html=(service.id in current_app.config["ALLOW_HTML_SERVICE_IDS"]),
+            user_language=get_current_locale(current_app),
             **get_email_logo_options(service),
         )
     if "sms" == template["template_type"]:
@@ -519,6 +522,7 @@ def get_template(
             show_recipient=show_recipient,
             redact_missing_personalisation=redact_missing_personalisation,
             jinja_path=debug_template_path,
+            user_language=get_current_locale(current_app),
         )
     if "letter" == template["template_type"]:
         if letter_preview_url:

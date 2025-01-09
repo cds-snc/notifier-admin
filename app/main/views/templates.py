@@ -1294,8 +1294,10 @@ def add_recipients(service_id, template_id):
                 session["recipient"] = form.placeholder_value.data
                 if template["template_type"] == "email":
                     session["placeholders"]["email address"] = form.placeholder_value.data
+                    session["placeholders"]["adresse courriel"] = form.placeholder_value.data
                 else:
                     session["placeholders"]["phone number"] = form.placeholder_value.data
+                    session["placeholders"]["numéro de téléphone"] = form.placeholder_value.data
                 return redirect(url_for(".send_one_off_step", service_id=service_id, template_id=template_id, step_index=1))
         except HTTPError as e:
             flash(e.message)

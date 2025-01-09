@@ -678,8 +678,9 @@ def test_documentation_url(mocker, app_, feature, lang, section, expected):
 def test_get_template_with_html_allowed(mocker, app_, service_one, fake_uuid, allowed_service_id, allow_html):
     template = template_json(SERVICE_ONE_ID, fake_uuid, type_="email")
 
-    with set_config(app_, "ALLOW_HTML_SERVICE_IDS", allowed_service_id):
-        email_template = get_template(template, service_one)
+    with app_.test_request_context():
+        with set_config(app_, "ALLOW_HTML_SERVICE_IDS", allowed_service_id):
+            email_template = get_template(template, service_one)
 
     assert email_template is not None
     assert email_template.allow_html is allow_html
