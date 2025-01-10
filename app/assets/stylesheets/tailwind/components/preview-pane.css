@@ -1,8 +1,6 @@
 @layer components {
   .branding-preview {
-    min-height: 200px;
-    border-width: 1px;
-    @apply w-full mb-12 box-border border-solid border-gray-grey2;
+    @apply box-border border mb-gutterHalf border-gray-300;
   }
 
   #logo-img {

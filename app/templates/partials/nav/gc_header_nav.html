@@ -103,7 +103,7 @@
               {{ nav_menu_item(url=url_for('main.contact', service_id=current_service.id),localised_txt=_('Contact us'), is_active=header_navigation.is_selected('contact')) }}
             {% endif %}
           {% else %} {# current_user.platform_admin #}
-            {% if not platform_admin_view_ind %}
+            
               {% if current_user.has_permissions() %}
                 {{ nav_menu_item(url=url_for('main.live_services', service_id=current_service.id), localised_txt=_('Admin panel'), css_classes='pl-0') }}
                 {{ nav_menu_item(url=url_for('main.service_dashboard', service_id=current_service.id),localised_txt=_('Dashboard'), is_active=header_navigation.is_selected('dashboard')) }}
@@ -113,9 +113,10 @@
                 {{ nav_menu_item(url=url_for('main.service_settings', service_id=current_service.id),localised_txt=_('Settings'), is_active=header_navigation.is_selected('settings')) }}
               {% else %} {# not current_user.has_permissions, i.e. services not in context #}
                 {{ nav_menu_item(url=url_for('main.choose_account'),localised_txt=_('Your services'),css_classes='pl-0',id_key='choose_account', is_active=header_navigation.is_selected('choose_account')) }}
-                {{ nav_menu_item(url=url_for('main.live_services', service_id=current_service.id),localised_txt=_('Admin panel')) }}
+                {{ nav_menu_item(url=url_for('main.live_services', service_id=current_service.id),localised_txt=_('Admin panel'),id_key='platform_admin',
+                is_active=header_navigation.is_selected('platform_admin')) }}
               {% endif %}
-            {% endif %}
+            
           {% endif %}
         {% endif %}
           <a

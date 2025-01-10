@@ -45,11 +45,15 @@ module.exports = {
     },
     colors: {
       red: {
-        default: "#b10e1e",
-        hover: "#990c1a",
-        border: "#6a0812",
-        mellow: "#df3034",
-        300: "#D74D42",
+        default: "#9F331A",
+        hover: "#9F331A",
+        border: "#9F331A",
+        mellow: "#D74224",
+        100: "#FFC6C3",
+        300: "#FB6252",
+        500: "#D74224",
+        700: "#9F331A",
+        900: "#471A0A",
       },
       white: {
         default: "#FFF",
@@ -189,6 +193,7 @@ module.exports = {
       },
       minHeight: {
         target: "45px",
+        emptyState: "190px",
       },
       minWidth: {
         target: "45px",

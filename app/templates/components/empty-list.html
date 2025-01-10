@@ -1,11 +1,15 @@
-{% macro empty_list(heading, message, img="emptyFlower", link=None, linkText="", attributes="") %}
-  <div class="flex items-center border-dashed border-1 border-gray-400 p-8 sm:bg-{{img}} sm:bg-right bg-empty-state" data-testid='empty-list'>
-    <div class="w-full sm:w-2/3" tabindex="0">
-      <div class="text-title text-gray-700 mb-6">{{ heading }}</div>
+{% macro empty_list(heading, message=None, img="emptyFlower", link=None, linkText="", attributes="") %}
+<div class="flex items-center border-dashed border-1 border-gray-400 p-8 sm:bg-{{img}} sm:bg-right bg-empty-state min-h-emptyState" data-testid='empty-list'>
+  <div class="w-full sm:w-2/3 space-y-gutterHalf" tabindex="0">
+    <div class="text-title text-gray-700">{{ heading }}</div>
+    {% if message %}
       <p class="mb-0 text-base text-gray-800">{{ message }}</p>
-      {% if link %}
-        <a class="inline-block mt-6 text-base font-bold" {% if attributes %} {{ attributes }} {% endif %} href="{{ link }}">{{ linkText }}</a>
-      {% endif %}
+    {% endif %}
+    {% if link %}
+      <a class="inline-block text-base font-bold" {% if attributes %} {{ attributes }} {% endif %} href="{{ link }}">
+        {{ linkText }}
+      </a>
+    {% endif %}
     </div>
   </div>
 {% endmacro %}

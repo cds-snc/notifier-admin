@@ -24,9 +24,9 @@
   <div class="user-list">
     {% for user in users %}
       <div class="user-list-item">
-        <h3>
+        <h3 class="flex justify-between">
           {%- if user.name -%}
-            <span class="heading-small">{{ user.name }}</span>&ensp;
+            <span class="heading-small m-0">{{ user.name }}</span>&ensp;
           {%- endif -%}
           <span class="hint">
             {%- if user.status == 'pending' -%}
