@@ -424,6 +424,28 @@ def test_should_show_scheduled_job(
 
 
 @freeze_time("2016-01-01T00:00:00.061258")
+def test_percent_complete_zero_if_job_is_scheduled_and_send_time_has_not_elapsed(
+    client_request,
+    mock_get_service_template,
+    mock_get_scheduled_job,
+    mock_get_service_data_retention,
+    mock_get_no_notifications,
+    fake_uuid,
+):
+    page = client_request.get(
+        "main.view_job",
+        service_id=SERVICE_ONE_ID,
+        job_id=fake_uuid,
+    )
+
+    # These elements are not rendered if we're sending a scheduled job. Is also indicative of
+    # percentage complete being 0 as notifications are not added to the DB until the time of send
+    assert page.find(id="pe_filter") is None
+    assert page.find("a[text='Download this report']") is None
+    assert page.find("table") is None
+
+
+@freeze_time("2016-01-01T00:00:00.061258")
 def test_should_show_job_from_api(
     client_request,
     mock_get_service_template,
