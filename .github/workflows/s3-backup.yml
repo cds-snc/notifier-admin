@@ -35,5 +35,5 @@ jobs:
     - name: Notify Slack channel if this job failed
       if: ${{ failure() }}
       run: |
-        json='{"text":"S3 backup failed in <https://github.com/'${{ github.repository }}'>!"}'
+        json='{"text":"S3 backup failed in <https://github.com/${{ github.repository }}>!"}'
         curl -X POST -H 'Content-type: application/json' --data "$json"  ${{ secrets.SLACK_NOTIFY_WEBHOOK }}
