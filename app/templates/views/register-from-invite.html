@@ -14,7 +14,7 @@
     <h1 class="heading-large">{{ _('Create an account') }}</h1>
     <p>
       {{ _('Your account will be created with this email address:') }}
-      <span class="whitespace-no-wrap">{{invited_user.email_address}}</span>
+      <span class="whitespace-nowrap">{{invited_user.email_address}}</span>
     </p>
     {% call form_wrapper() %}
       {{ textbox(form.name, width='w-full md:w-3/4') }}

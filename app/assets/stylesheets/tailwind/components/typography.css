@@ -31,7 +31,7 @@
   }
 
   a:focus {
-    @apply bg-yellow border-b-2 border-blue outline-none no-underline;
+    @apply bg-yellow border-b-2 border-blue outline-none no-underline outline-offset-0 shadow-outline;
   }
 
   a:link:focus {

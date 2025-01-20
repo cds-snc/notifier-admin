@@ -63,7 +63,7 @@
 {% if withnav %}
   <nav class="bg-gray hidden md:visible md:flex" aria-label="{{ _('Main menu') }}">
     <div class="container px-gutterHalf">
-      <div id="proposition-links" class="flex flex-no-wrap items-baseline">
+      <div id="proposition-links" class="flex flex-nowrap items-baseline">
         {% if not current_user.is_authenticated %}
           {% if nav_items %}
             {% for i in nav_items %}

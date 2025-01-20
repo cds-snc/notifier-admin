@@ -1,7 +1,7 @@
 {% from "components/table.html" import edit_field, text_field %}
 
 {% macro profile_item(label, value, action=None) %}
-  <div class="flex flex-wrap md:flex-no-wrap items-end border-b-1 border-gray-400 py-5">
+  <div class="flex flex-wrap md:flex-nowrap items-end border-b-1 border-gray-400 py-5">
     <div class="w-full sm:w-3/4" tabindex="0">
       <div class="text-gray-600">{{ text_field(label) }}</div>
       <div class="font-bold inline-block mt-2 break-words mr-5 overflow-anywhere">{{ value }}</div>
