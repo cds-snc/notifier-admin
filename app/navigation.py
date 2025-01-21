@@ -243,6 +243,23 @@ class HeaderNavigation(Navigation):
             "view_jobs",
             "view_job",
         },
+        "platform_admin": {
+            "live_services",
+            "trial_services",
+            "organisations",
+            "live_api_keys",
+            "email_branding",
+            "template_categories",
+            "template_category",
+            "find_services_by_name",
+            "find_users_by_email",
+            "find_ids",
+            "platform_admin_list_complaints",
+            "platform_admin_reports",
+            "inbound_sms_admin",
+            "view_providers",
+            "clear_cache",
+        },
     }
 
     exclude = {

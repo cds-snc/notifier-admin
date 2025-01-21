@@ -39,6 +39,7 @@
 @import "./components/task-list.css";
 @import "./components/back-link.css";
 @import "./components/preview-fullpage-border.css";
+@import "./components/preview-pane.css";
 @import "./components/remaining-messages.css";
 @import "./components/empty-list.css";
 @import "./components/autocomplete.css";

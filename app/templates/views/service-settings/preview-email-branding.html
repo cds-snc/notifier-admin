@@ -9,7 +9,7 @@
   <h1 class="heading-large">Preview email branding</h1>
   <div class="grid-row contain-floats">
     <div class="w-full float-left py-0 px-0 px-gutterHalf box-border">
-      <iframe src="{{ url_for('main.email_template', branding_style=form.branding_style.data) }}" class="branding-preview"></iframe>
+      <iframe src="{{ url_for('main.email_template', branding_style=form.branding_style.data) }}" class="branding-preview" width="600" height="345"></iframe>
       {% call form_wrapper(action=action) %}
         <div class="form-group contain-floats box-border mb-gutterHalf md:mb-gutter">
           {{ form.hidden_tag() }}

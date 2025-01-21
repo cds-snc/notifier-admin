@@ -8,7 +8,7 @@
   table th,
   table td {
     padding: 0.632em 1.05em 0.4743em 0;
-    @apply leading-tight text-smaller text-left border-solid border-0 border-b-1 border-gray-300;
+    @apply leading-tight text-smaller text-left border-solid border-0 border-b-1 border-gray-300 align-baseline;
   }
   thead th {
     @apply font-bold;
@@ -54,6 +54,7 @@
   }
 
   .table-row-group {
+    box-shadow: inset 0 -1px 0 theme("colors.gray.300");
     @apply border-0 border-t-1 border-b-1 border-solid border-gray-300;
   }
 
@@ -95,10 +96,6 @@
   .settings-table .table-heading {
     @apply mb-8;
   }
-
-  .table-field {
-    @apply align-top;
-  }
   .table-field-index {
     width: 15px;
     @apply relative text-smaller leading-tight font-bold;
@@ -134,7 +131,7 @@
   }
   .table-field-headings th,
   .table-field-headings-visible th {
-    @apply text-smaller leading-tight font-bold;
+    @apply text-smaller leading-tight font-bold align-baseline;
   }
   .dashboard-table .table-field-heading-first,
   .dashboard-table .table-field-headings-first,

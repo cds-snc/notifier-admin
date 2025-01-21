@@ -23,7 +23,7 @@
     `<iframe src="/_${previewType}?${buildQueryString([
       "branding_style",
       branding_style,
-    ])}" class="branding-preview border-4 border-gray-200" width="600px" height="345px"></iframe>`,
+    ])}" class="branding-preview" width="600px" height="345px"></iframe>`,
   );
 
   function buildQueryString() {
