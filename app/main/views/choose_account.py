@@ -1,10 +1,11 @@
 from flask import redirect, render_template, session, url_for
 from flask_login import current_user
 
-from app import status_api_client
+from app import status_api_client, service_api_client
 from app.main import main
 from app.models.organisation import Organisations
 from app.utils import PermanentRedirect, user_is_logged_in
+from app.models.service import Service
 
 
 @main.route("/services")
@@ -26,11 +27,14 @@ def choose_account():
             len(Organisations()),
             status_api_client.get_count_of_live_services_and_organisations()["services"],
         )
+
+    example_service = Service(service_api_client.get_service(service_id="66a4ae1b-653f-4699-8675-fe86e6b147e7")["data"])
     return render_template(
         "views/choose-account.html",
         can_add_service=current_user.is_gov_user,
         org_count=org_count,
         live_service_count=live_service_count,
+        example_service=example_service,
     )
 
 
@@ -47,11 +51,11 @@ def show_accounts_or_dashboard():
     if organisation_id and (current_user.belongs_to_organisation(organisation_id) or current_user.platform_admin):
         return redirect(url_for(".organisation_dashboard", org_id=organisation_id))
 
-    if len(current_user.service_ids) == 1 and not current_user.organisation_ids:
-        return redirect(url_for(".service_dashboard", service_id=current_user.service_ids[0]))
+    # if len(current_user.service_ids) == 1 and not current_user.organisation_ids:
+    #     return redirect(url_for(".service_dashboard", service_id=current_user.service_ids[0]))
 
-    if len(current_user.organisation_ids) == 1 and not current_user.trial_mode_services:
-        return redirect(url_for(".organisation_dashboard", org_id=current_user.organisation_ids[0]))
+    # if len(current_user.organisation_ids) == 1 and not current_user.trial_mode_services:
+    #     return redirect(url_for(".organisation_dashboard", org_id=current_user.organisation_ids[0]))
 
     if len(current_user.service_ids) == 0 and not current_user.organisation_ids and not current_user.platform_admin:
         return redirect(url_for("main.welcome"))

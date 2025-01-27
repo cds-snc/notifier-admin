@@ -565,12 +565,13 @@ def create_template(service_id, template_type="all", template_folder_id=None):
 @main.route("/services/<service_id>/templates/copy/from-service/<uuid:from_service>")
 @main.route("/services/<service_id>/templates/copy/from-service/<uuid:from_service>/from-folder/<uuid:from_folder>")
 @main.route("/services/<service_id>/templates/all/folders/<uuid:from_folder>/copy")
-@user_has_permissions("manage_templates")
+# @user_has_permissions("manage_templates")
 def choose_template_to_copy(
     service_id,
     from_service=None,
     from_folder=None,
 ):
+    example_service = Service(service_api_client.get_service(service_id="66a4ae1b-653f-4699-8675-fe86e6b147e7")["data"])
     if from_folder and from_service is None:
         from_service = service_id
 
@@ -584,6 +585,7 @@ def choose_template_to_copy(
             template_folder_path=service.get_template_folder_path(from_folder),
             from_service=service,
             search_form=SearchByNameForm(),
+            example_service=TemplateList(example_service),
         )
 
     else:
@@ -591,6 +593,7 @@ def choose_template_to_copy(
             "views/templates/copy.html",
             services_templates_and_folders=TemplateLists(current_user),
             search_form=SearchByNameForm(),
+            example_service=TemplateList(example_service),
         )
 
 

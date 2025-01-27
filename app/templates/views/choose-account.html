@@ -78,6 +78,12 @@
       </div>
       <div class="keyline-block"></div>
     {% endif %}
+    {% set heading_txt = _('Example service') %}
+      {{ service_list(
+        heading=heading_txt,
+        show_heading=(current_user.organisations or current_user.live_services),
+        services=[example_service]
+      ) }}
     {% set heading_txt = _('Live services') %}
     {% if current_user.organisations %}
       {{ service_list(
