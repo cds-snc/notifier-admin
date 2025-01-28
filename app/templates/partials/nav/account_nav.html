@@ -1,0 +1,19 @@
+{% from "components/buttons.html" import nav_button %}
+
+<nav id="account" aria-label="{{ _('Your account') if current_user.is_authenticated else _('Sign-in') }}"
+    class="flex container">
+    <ul class="flex w-full justify-end relative max-w-screen-xl w-[90%]">
+        {% if current_user.is_authenticated %}
+        {% include 'partials/nav/account_menu.html' %}
+        {% else %}
+        <li>
+            {{ nav_button(
+              href=url_for('main.sign_in'),
+              label=_('Sign in'),
+              aria_label=_('Sign in to GC Notify'),
+              id_key='header-sign-in'
+            ) }}
+        </li>
+        {% endif %}
+    </ul>
+</nav>

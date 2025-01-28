@@ -9,7 +9,7 @@
 
   .banner:focus,
   .banner-default-with-tick:focus {
-    @apply outline-yellow;
+    @apply outline-none shadow-outline;
   }
 
   .banner-dangerous {

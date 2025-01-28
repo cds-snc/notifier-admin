@@ -1,0 +1,22 @@
+<gcds-top-nav class="bg-gray-100" label="{{ _('Main menu') }}"
+    alignment="{{ 'right' if current_user.is_authenticated else 'left' }}">
+    {% if current_user.is_authenticated %}
+    <gcds-nav-link href="{{url_for('main.choose_account')}}" slot="home">{{ _("GC Notify") }}</gcds-nav-link>
+    {% endif %}
+    {% if nav_items %}
+    {% for i in nav_items %}
+    {% if 'main' in i.description %}
+    <gcds-nav-link href="{{ i.url }}" external="{{ i.target }}" {{ "current" if i.active }}>
+        {{ i.title }}
+    </gcds-nav-link>
+    {% endif %}
+    {% endfor %}
+    {% else %}
+    {% for item in main_navigation %}
+    <gcds-nav-link href="{{ item.url }}" external="{{ item.target }}">
+        {{ item.name }}
+    </gcds-nav-link>
+    {% endfor %}
+    {% endif %}
+
+</gcds-top-nav>

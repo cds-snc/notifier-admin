@@ -53,6 +53,7 @@
 @import "./views/notification.css";
 
 @import "./toolkit/wp.css";
+@import "./toolkit/gcds.css";
 
 /*! purgecss start ignore */
 @-ms-viewport {
@@ -101,9 +102,7 @@ section {
   @apply m-0 p-0 align-baseline;
 }
 
-main {
-  @apply block;
-}
+
 
 input[type="search"]::-webkit-search-cancel-button {
   -webkit-appearance: searchfield-cancel-button;
@@ -122,7 +121,6 @@ section[id]:target {
     0 0 0 15px var(--white),
     0 0 0 20px var(--yellow);
   animation: target 3s linear 3s forwards;
-  /* @apply bg-yellow-light; */
 }
 
 @keyframes target {

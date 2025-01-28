@@ -25,17 +25,11 @@
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0.3);
   }
 
-  a:visited,
-  a:link {
-    @apply text-blue;
-  }
 
-  a:focus {
-    @apply bg-yellow border-b-2 border-blue outline-none no-underline;
-  }
 
-  a:link:focus {
-    @apply text-blue;
+  a:focus,
+  a:focus-visible {
+    @apply no-underline bg-yellow text-black outline-none shadow-outline;
   }
 
   a[target="_blank"]::after {
@@ -51,10 +45,6 @@
   [class*="delete-link"] a:hover,
   [class*="delete-link"] a:active {
     @apply text-red-mellow;
-  }
-
-  [class*="delete-link"] a:focus {
-    @apply border-red-mellow text-blue;
   }
 
   .page-content h3,

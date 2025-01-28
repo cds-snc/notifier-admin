@@ -28,7 +28,7 @@
 
       {{ textbox(form.email_from, hint=hint_txt, suffix=suffix_txt, width='1-2', maxlength=64) }}
 
-      <div id="preview" class="focus:outline-yellow" style="display: none" tabindex="0" >
+      <div id="preview" class="" style="display: none" tabindex="0">
         {% call confirmation_preview() %}
           <p class="m-0">{{_("Check that your email address is formatted correctly.")}}</p>
           <p class="m-0">

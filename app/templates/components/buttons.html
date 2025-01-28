@@ -10,7 +10,7 @@
 ) %}
     <a
         {% if id_key %}id="{{ id_key }}"{% endif %}
-        class="inline-flex items-center self-center py-1 px-4 line-under text-smaller border-b-2 border-transparent focus:outline-none focus:bg-yellow focus:border-blue hover:underline min-h-target {% if class %} {{ class }} {% endif %}"
+        class="inline-flex items-center self-center py-1 px-4 line-under text-smaller border-b-2 border-transparent    hover:underline min-h-target {% if class %} {{ class }} {% endif %}"
         href="{{ href }}"
         {% if lang %} lang="{{ lang }}" {% endif %}>
         {% if aria_label and aria_label != label %}
@@ -53,7 +53,7 @@
 <a
     {% if id_key %}id="{{ id_key }}"{% endif %}
     href="{{ href }}"
-    class="p-4 line-under text-base text-default underline text-white border-b-2 border-transparent link:text-white visited:text-white hover:no-underline focus:text-blue focus:outline-none focus:border-b-2 focus:border-white focus:no-underline {% if class %} {{ class }} {% endif %}"
+    class="p-4 line-under text-base text-default underline text-white border-b-2 border-transparent link:text-white visited:text-white hover:no-underline      {% if class %} {{ class }} {% endif %}"
     aria-label="{{ label }}"
     >
     {{ label }}

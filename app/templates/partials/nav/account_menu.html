@@ -1,44 +1,7 @@
-<!-- Large screen menu dropdown -->
-<li class="md:visible md:flex grid-flow-row relative justify-end inline-block w-full text-left text-blue visited:text-blue
-link:text-blue no-underline text-small">
-  <button
-    aria-controls="account-menu-options"
-    aria-expanded="false"
-    class="inline-flex items-center line-under shadow-sm text-smaller font-medium text-blue px-4 py-1 border-b-2
-      border-transparent focus:outline-none focus:bg-yellow focus:border-blue hover:bg-gray-50 hover:underline"
-    id="account-menu"
-    data-module="menu"
-    data-menu-items="account-menu-options"
-    type="button">
-      {{ _('Your account') }}
-      <img alt="" aria-hidden="true" class="account-menu-arrow ml-2 inline arrow self-center" src="{{ asset_url('images/arrow-licorice.svg') }}" width="15"/>
-  </button>
-  <ul
-    id="account-menu-options"
-    class="absolute flex flex-col content-end divide-y divide-gray right-0 top-full w-auto text-right rounded bg-white shadow hidden z-50"
-    hidden>
-    {% if current_user.platform_admin %}
-      <li>
-        <a id="account-menu-link" href="{{ url_for('main.live_services') }}" class="flex justify-end items-center min-h-target px-8 py-4 leading-none no-underline text-smaller border-transparent border-b-0 focus:border-b-0 focus:outline-none focus:shadow-insetLine2 {% if main_navigation.is_selected('live_services') %} menu--active {% endif %}">
-          {{ _('Admin panel') }}
-        </a>
-      </li>
-    {% endif %}
-    <li>
-      <a href="{{ url_for('main.choose_account') }}" class="flex justify-end items-center min-h-target px-8 py-4 leading-none no-underline text-smaller border-transparent border-b-0 focus:border-b-0 focus:outline-none focus:shadow-insetLine2 {% if main_navigation.is_selected('choose_account') %} menu--active {% endif %}">
-        {{ _('Your services') }}
-      </a>
-    </li>
-    <li>
-      <a href="{{ url_for('main.user_profile') }}" class="flex justify-end items-center min-h-target px-8 py-4 leading-none no-underline text-smaller border-transparent border-b-0 focus:border-b-0 focus:outline-none focus:shadow-insetLine2 {% if main_navigation.is_selected('user_profile') %} menu--active {% endif %}">
-        {{ _('Your profile') }}
-      </a>
-    </li>
-    <li>
-      <a href="{{ url_for('main.sign_out') }}" class="flex justify-end items-center min-h-target px-8 py-4 leading-none text-blue no-underline text-smaller border-transparent border-b-0 focus:border-b-0 visited:text-blue link:text-blue focus:outline-none focus:shadow-insetLine2 {% if main_navigation.is_selected('sign_out') %} menu--active {% endif %}">
-        {{ _('Sign out') }}
-      </a>
-    </li>
-  </ul>
-</li>
-<!-- Large screen dropdown END -->
+<gcds-nav-group class="md:absolute md:right-full md:-top-3 w-full md:w-max z-10" open-trigger="{{ _('Your account') }}"
+  menu-label="{{ _('Your account') }}">
+  {% for item in account_navigation %}
+  <gcds-nav-link href="{{ item.url }}">{{ item.name }}</gcds-nav-link>
+  {% endfor %}
+
+</gcds-nav-group>

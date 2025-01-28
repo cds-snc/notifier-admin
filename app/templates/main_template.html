@@ -12,6 +12,16 @@
   {% include 'partials/google-tag-manager-head.html' %}
   {% include 'partials/qualtrics-head.html' %}
 
+  <!-- GCDS icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+    crossorigin="anonymous">
+
+  <!-- GC Design System -->
+  <link rel="stylesheet" media="screen" href="{{ asset_url('stylesheets/gcds.css') }}" />
+  <script nonce="{{ request_nonce }}" type="module" src="{{ asset_url('javascripts/gcds.esm.js') }}"></script>
+
+  <!-- end GCDS -->
+
   <link
     rel="stylesheet"
     media="screen"
@@ -125,35 +135,25 @@
 
 {% block body_start %}{% endblock %}
 
-<div id="skiplink-container">
-  <div>
-    <a
-      href="#main_content"
-      class="skiplink"
-    >{{ _('Skip to main content') }}</a>
-  </div>
-</div>
 {% block gc_header %}
+  {% set set_lang_url = lang_url or request.path %}
+  <gcds-header signature-has-link="false" lang-href="{{ url_for('main.set_lang') + "?from=" + set_lang_url }}"
+    skip-to-href="#main_content">
+    <div slot="menu">
+      {% include "partials/nav/main_nav.html" %}
+    </div>
+    <div slot="search" class="relative">
+      {% if current_user.is_authenticated %}
+      {% include "partials/nav/account_menu.html" %}
+      {% else %}
+      <gcds-link size="regular" href="{{ url_for('main.sign_in')}} ">{{ _('Sign in') }}</gcds-link>
+      {% endif %}
+    </div>
+  </gcds-header>
+  {% endblock gc_header %}
 
-{% if g.preview_url %}
-  <div class="preview-fullpage-border"></div>
-{% endif %}
-
-<header>
-
-{% if g.preview_url %}
-  {% include 'components/preview-banner.html' %}
-{% endif %}
-
-{% include 'partials/nav/gc_header.html' %}
-
-{% include 'partials/nav/gc_header_nav.html' %}
-
-</header>
-{% endblock %}
-
-
-{% block after_header %}{% endblock %}
+{% block after_header %}
+{% endblock after_header %}
 
 
 {% block content %}{% endblock %}

@@ -1,0 +1,44 @@
+/* Theming API*/
+gcds-header {
+  --gcds-header-margin: 0;
+}
+gcds-nav-group {
+  --gcds-nav-group-trigger-focus-background: theme("colors.yellow.DEFAULT");
+  --gcds-nav-group-trigger-focus-text: theme("colors.black");
+  --gcds-nav-group-trigger-focus-border-radius: 0;
+  --gcds-nav-group-trigger-focus-outline: 3px solid
+    theme("colors.yellow.300");
+}
+
+gcds-nav-link {
+  --gcds-nav-link-focus-background: theme("colors.yellow.DEFAULT");
+  --gcds-nav-link-focus-text: theme("colors.black");
+  --gcds-nav-link-focus-border-radius: 0;
+  --gcds-nav-link-focus-outline: 3px solid
+    theme("colors.yellow.300");
+}
+
+gcds-footer,
+gcds-header,
+gcds-link {
+  --gcds-link-focus-background: theme("colors.yellow.DEFAULT");
+  --gcds-link-focus-text: theme("colors.black");
+  --gcds-link-focus-border-radius: 0;
+  --gcds-link-focus-outline-width: 0;
+  --gcds-link-focus-box-shadow: 0 0 0 2px white, 0 0 0 5px theme('colors.yellow.300');
+}
+
+
+/* Interfacing with Notify */
+[slot=search] gcds-nav-group[open] {
+  @apply bg-white border border-gray-300;
+}
+[slot=search] gcds-nav-group {
+  @apply border border-transparent;
+}
+
+
+/* Recipe to set fluid width on containers, as does GCDS */
+.container.max-w-screen-xl {
+  width: 90%;
+}

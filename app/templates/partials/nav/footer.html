@@ -1,114 +1,26 @@
 {% from "components/buttons.html" import nav_button, secondary_button_transparent_white %}
 {% from "components/links.html" import nav_link_dark, nav_link_light with context %}
 
-<footer>
-  <div class="bg-blue">
-    <nav id="footer-primary" class="container px-gutterHalf" aria-label="{{ _('General information') }}">
-      <div class="py-24 grid lg:grid-cols-3 md:grid-cols-2 smaller:grid-cols-1 gap-x-gutter gap-y-gutterAndAHalf">
-        <div class="grid grid-cols-1 gap-y-1 auto-rows-min place-items-start">
-          <span class="text-white text-base font-bold mb-gutterHalf">{{ _("About") }}</span>
-          {% if nav_items %}
-            {% for i in nav_items %}
-              {% if 'footer:about' in i.description %}
-                {{ nav_link_dark(i.title, href=i.url, class="-ml-2", is_external_link=i.target) }}
-              {% endif %}
-            {% endfor %}
-          {% else %}
-            {{ nav_link_dark(id_key='nav-footer-primary-why-notify', label=_('Why GC Notify'), href=gca_url_for('whynotify'), class="-ml-2") }}
-            {{ nav_link_dark(id_key='nav-footer-primary-features', label=_('Features'), href=gca_url_for('features'), class="-ml-2") }}
-            {{ nav_link_dark(id_key='nav-footer-primary-new-features', label=_('New features'), href=gca_url_for('new_features'), class="-ml-2") }}
-            {{ nav_link_dark(id_key='nav-footer-primary-activity', label=_('Activity on GC Notify'), href=url_for('main.activity'), class="-ml-2") }}
-          {% endif %}
-        </div>
-        <div class="grid grid-cols-1 gap-y-1 auto-rows-min place-items-start">
-          <span class="text-white text-base font-bold mb-gutterHalf">{{ _("Using GC Notify") }}</span>
-          {% if nav_items %}
-            {% for i in nav_items %}
-              {% if 'footer:using' in i.description %}
-                {{ nav_link_dark(i.title, href=i.url, class="-ml-2", is_external_link=i.target) }}
-              {% endif %}
-            {% endfor %}
-          {% else %}
-            {{ nav_link_dark(id_key='nav-footer-primary-doc', label=_('API documentation'), href=documentation_url(), is_external_link=True, class="-ml-2") }}
-            {{ nav_link_dark(id_key='nav-footer-primary-guidance', label=_('Guidance'), href=gca_url_for('guidance'), class="-ml-2") }}
-            {{ nav_link_dark(id_key='nav-footer-sitemap', label=_('Sitemap'), href=url_for('main.sitemap'), class="-ml-2") }}
-            {{ nav_link_dark(id_key='nav-footer-primary-slo', label=_('Service level objectives'), href=gca_url_for('service-level-objectives'), class="-ml-2") }}
-          {% endif %}
-        </div>
-        <div class="grid grid-cols-1 gap-y-1 auto-rows-min place-items-start">
-          <span class="text-white text-base font-bold mb-gutterHalf">{{ _("Support") }}</span>
-          {% if nav_items %}
-            {% for i in nav_items %}
-              {% if 'footer:support' in i.description %}
-                {{ nav_link_dark(i.title, href=i.url, class="-ml-2", is_external_link=i.target) }}
-              {% endif %}
-            {% endfor %}
-          {% else %}
-            {{ nav_link_dark(id_key='nav-footer-primary-contact', label=_('Contact us'), href=url_for('main.contact'), class="-ml-2") }}
-            {{ nav_link_dark(id_key='nav-footer-system-status', label=_('System status'), href=config["SYSTEM_STATUS_URL"] + ('/#fr' if current_lang == 'fr' else ''), class="-ml-2") }}
-          {% endif %}
-        </div>
-      </div>
-    </nav>
-  </div>
+{% from "components/buttons.html" import nav_button, secondary_button_transparent_white %}
+{% from "components/links.html" import nav_link_dark, nav_link_light with context %}
 
-  <!-- start section 9 -->
-  {% macro separator() %}
-    <img 
-      aria-hidden="true"
-      alt=""
-      class="hidden lg:flex lg:visible separator self-center"
-      src="{{ asset_url('images/bullet.svg') }}"
-    />
-  {% endmacro %}
-  <div class="bg-gray">
-    <nav
-      id="footer-secondary"
-      class="container px-gutterHalf
-       grid lg:grid-cols-3 md:grid-cols-3 sm:grid-cols-1 gap-16 md:gap-4 py-24"
-      aria-label="{{ _('Legal information') }}">
-
-      <div class="flex flex-col gap-4 lg:flex-row lg:items-center md:col-span-2">
-        <ul class="-mx-2 p-0 list list-bullet list-inside md:col-span-2 lg:list-none lg:flex lg:flex-wrap lg:items-center">
-          <li>
-            {{ nav_link_light(id_key='nav-footer-secondary-privacy', class="whitespace-no-wrap",label=_('Privacy'), href=gca_url_for('privacy')) }}
-            {{ separator() }}
-          </li>
-          <li>
-            {{ nav_link_light(id_key='nav-footer-secondary-security', class="whitespace-no-wrap",label=_('Security'), href=gca_url_for('security')) }}
-            {{ separator() }}</li>
-          <li>
-            {{ nav_link_light(id_key='nav-footer-secondary-a11y', class="whitespace-no-wrap",label=_('Accessibility'), href=gca_url_for('accessibility')) }}
-            {{ separator() }}</li>
-          <li>
-            {{ nav_link_light(id_key='nav-footer-secondary-terms', class="whitespace-no-wrap",label=_('Terms of use'), href=gca_url_for('terms')) }}
-            {{ separator() }}</li>
-          <li>
-            {{ nav_link_light(id_key='nav-footer-secondary-sla', class="whitespace-no-wrap",label=_('Service level agreement'), href=gca_url_for('service-level-agreement')) }}
-          </li>
-        </ul>
-        <div class="lg:hidden mt-10">
-          <div class="inline-block">
-            {{ nav_button(
-              href="#top",
-              label=_('Top of page'),
-              aria_label=_('Top of page'),
-              link_img=asset_url('images/arrow-licorice.svg'),
-              class="text-blue pl-0",
-              link_img_class="transform rotate-180"
-            ) }}
-          </div>
-        </div>
-      </div>
-
-      <div class="sm:self-start md:self-end lg:self-center col-span-1">
-        <img
-          alt="{{ _('Government of Canada') }}"
-          class="float-left md:float-right"
-          src="{{ asset_s3_url('goc--footer-logo.svg') }}"
-          width="150"
-        />
-      </div>
-    </nav>
+<footer class="bg-blue">
+  <div
+    class="container max-w-screen-xl w-[90%] py-24 grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-x-gutter gap-y-gutterAndAHalf">
+    {% for section in footer_navigation %}
+    <nav id="{{ section.id }}">
+      <span class="block text-white text-base font-bold mb-gutterHalf">{{ section.name }}</span>
+      <ul class="space-y-1">
+        {% for title, url in section.links.items() %}
+        <li>
+        {{ nav_link_dark(title, href=url, class="px-0") }}
+        </li>
+      {% endfor %}
+    </ul>
+  </nav>
+  {% endfor %}
   </div>
 </footer>
+<gcds-footer contextual-heading="{{ _('General information') }}"
+  sub-links='{{ sub_footer_navigation | tojson | safe }}'>
+</gcds-footer>

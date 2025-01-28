@@ -7,15 +7,7 @@
   a.button:visited,
   a.button:active {
     padding: 0.55em 1em 0.45em;
-    box-shadow: 0 2px 0 theme("colors.blue.border");
-    @apply no-underline inline-flex items-center text-white text-smaller leading-tight align-top bg-blue min-h-target;
-  }
-  .button.shadow-none,
-  a.button.shadow-none,
-  a.button.shadow-none:link,
-  a.button.shadow-none:visited,
-  a.button.shadow-none:active {
-    padding: 0.5em 1em 0.5em;
+    @apply no-underline inline-flex items-center text-white text-smaller leading-tight align-top bg-blue min-h-target border-b-2 border-b-blue;
   }
 
   .button:hover,
@@ -24,10 +16,10 @@
   }
 
   .button:focus,
-  a.button:focus {
-    outline: 3px solid theme("colors.yellow.DEFAULT");
-    outline-offset: 0;
-    @apply border-transparent shadow-outline;
+  .button:focus-visible,
+  a.button:focus,
+  a.button:focus-visible {
+    @apply border-transparent outline-none shadow-outline;
   }
 
   .button-blue-lighter,
@@ -44,16 +36,14 @@
 
   .button-blue-lighter:focus,
   a.button-blue-lighter:focus {
-    box-shadow: 0px;
-    @apply bg-yellow outline-none border-transparent outline-none;
+    @apply border-transparent;
   }
 
   .button-red,
   a.button-red:visited,
   a.button-red:link,
   a.button-red {
-    @apply bg-red;
-    box-shadow: 0 2px 0 theme("colors.red.border");
+    @apply bg-red border-red-900;
   }
   .button-red:hover,
   a.button-red:hover {
@@ -64,9 +54,7 @@
   a.button-secondary,
   a.button-secondary:visited,
   a.button-secondary:link {
-    box-shadow: 0 2px 0 theme("colors.gray.border");
-    font-size: 1em;
-    @apply text-black bg-gray-button;
+    @apply text-black bg-gray-200 border-gray-400;
   }
 
   .button-secondary:hover,
@@ -76,8 +64,7 @@
 
   .button-secondary:focus,
   a.button-secondary:focus {
-    outline: 1px solid theme("colors.yellow.DEFAULT");
-    @apply border-transparent shadow-outline;
+    @apply border-transparent;
   }
 
   .button.disabled,
@@ -94,8 +81,7 @@
   a.button-link,
   a.button-link:visited,
   a.button-link:link {
-    box-shadow: none;
-    @apply bg-transparent border-b-2 border-transparent px-5 py-4 underline;
+    @apply shadow-none bg-transparent border-b-2 border-transparent px-5 py-4 underline;
   }
   .button-link:hover,
   a.button-link:hover {
@@ -103,7 +89,18 @@
   }
   .button-link:focus,
   a.button-link:focus {
-    @apply bg-yellow text-blue outline-none border-white no-underline;
+    @apply border-transparent no-underline;
+  }
+
+  .nav-link {
+    @apply p-2 text-small no-underline line-under border-b-2 border-transparent hover:underline decoration-clone inline-flex items-center min-h-target;
+  }
+  .nav-link-dark {
+    @apply text-white focus:text-black focus-visible:text-black;
+  }
+
+  .nav-link-light {
+    @apply text-blue focus:text-black focus-visible:text-black;
   }
 
   /*! purgecss end ignore */

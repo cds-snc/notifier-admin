@@ -31,7 +31,7 @@
   }
   .pill a:active,
   .pill a:focus {
-    @apply z-10 bg-yellow text-blue outline-none;
+    @apply z-10 bg-yellow text-blue outline-none shadow-outline;
   }
 
   a.pill-selected-item {
@@ -42,7 +42,7 @@
   }
   a.pill-selected-item:focus {
     z-index: 1000;
-    @apply outline-yellow;
+    @apply outline-none shadow-outline
   }
 
   a.pill-unselected-item {
@@ -62,7 +62,7 @@
   }
   a.pill-unselected-item:focus {
     z-index: 1000;
-    @apply outline-yellow border-0;
+    @apply outline-none shadow-outline;
   }
 
   .pill-centered-item {

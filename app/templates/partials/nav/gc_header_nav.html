@@ -21,7 +21,7 @@
             id="menu"
             data-module="menu"
             data-menu-items="main-menu-nav"
-            class="mr-5 p-4 bg-blue flex-shrink text-white text-smaller focus:outline-yellow visited:text-white link:text-white no-underline"
+            class="mr-5 p-4 bg-blue flex-shrink text-white text-smaller  visited:text-white link:text-white no-underline"
             type="button">
             {{ _('Menu') }}
             <img alt="" aria-hidden="true" class="account-menu-arrow ml-2 inline arrow self-center" src="{{ asset_url('images/arrow-white.svg') }}" width="15"/>
@@ -48,7 +48,7 @@
         {% endif %}
             <a
               id="nav-lang"
-              class="p-2 min-w-target min-h-target border-2 border-solid border-gray flex items-center justify-center line-under leading-none text-blue visited:text-blue link:text-blue text-smaller underline hover:no-underline focus:outline-yellow focus:border-gray focus:bg-white"
+              class="p-2 min-w-target min-h-target border-2 border-solid border-gray flex items-center justify-center line-under leading-none text-blue visited:text-blue link:text-blue text-smaller underline hover:no-underline   "
               href="{{ url_for('main.set_lang') }}?from={{ lang_url or request.path }}"
               lang="{{ 'fr-CA' if lang_switch == 'FR' else 'en-CA' }}">
               <span class="sr-only">{{ long_lang_switch }}</span>
@@ -121,7 +121,7 @@
           <a
           href="#"
           id="more-menu"
-          class="hidden text-smaller text-blue py-5 visited:text-blue link:text-blue font-bold no-underline focus:outline-none focus:bg-yellow focus:border-b-4 focus:border-blue ml-auto items-center flex"
+          class="hidden text-smaller text-blue py-5 visited:text-blue link:text-blue font-bold no-underline     ml-auto items-center flex"
           data-module="more-menu"
           data-module-menu-items="proposition-links"
           data-module-menu-container="more-menu-container"

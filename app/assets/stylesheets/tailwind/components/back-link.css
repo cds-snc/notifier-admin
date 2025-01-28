@@ -1,20 +1,19 @@
 @layer components {
   /*! purgecss start ignore */
   .back-link {
-    padding-left: 14px;
-    @apply text-small leading-tight font-normal text-black inline-block relative mt-gutterHalf mb-4 no-underline border-b-1 border-solid border-black;
+    @apply text-small text-black inline-flex mt-gutterHalf mb-4 no-underline border-b-1 border-solid border-black gap-4;
   }
-  .back-link:focus {
-    @apply border-b-1;
+  .back-link:focus,
+  .back-link:focus-visible {
+    @apply border-b-1 ring ring-yellow-300
   }
   .back-link:link,
   .back-link:visited {
     @apply text-black;
   }
-  .back-link:before,
-  .back-link:after {
+  .back-link:before {
     content: "";
-    @apply absolute border-solid border-transparent;
+    @apply border-solid border-transparent;
   }
   .back-link:before {
     -webkit-clip-path: polygon(0% 50%, 100% 100%, 100% 0%);
@@ -25,12 +24,6 @@
     bottom: 1px;
     @apply block w-0 h-0 left-0 m-auto;
   }
-  .back-link:after {
-    content: "";
-    top: -15px;
-    left: -3px;
-    border-width: 15px 30px 15px 3px;
-    @apply w-full h-full;
-  }
+
   /*! purgecss end ignore */
 }

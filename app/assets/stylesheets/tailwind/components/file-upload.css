@@ -24,7 +24,7 @@
   }
 
   .js-enabled .file-upload-group:focus-within .file-upload-button {
-    @apply outline-yellow;
+    @apply outline-none shadow-outline;
   }
 
   .js-enabled #file-upload-button {

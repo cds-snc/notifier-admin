@@ -286,7 +286,7 @@
     table-layout: inherit !important;
   }
   .scrollable-table:focus {
-    @apply outline-yellow;
+    @apply outline-none shadow-outline;
   }
 
   .scrollable-table table {

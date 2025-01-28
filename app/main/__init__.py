@@ -2,6 +2,8 @@ from flask import Blueprint
 
 main = Blueprint("main", __name__)
 
+from app.main.navigation import get_account_nav, get_footer, get_main_nav, get_sub_footer
+
 from app.main.views import (  # noqa isort:skip
     add_service,
     api_keys,
@@ -38,3 +40,13 @@ from app.main.views import (  # noqa isort:skip
     user_profile,
     verify,
 )
+
+
+@main.context_processor
+def navigation():
+    return {
+        "footer_navigation": get_footer(),
+        "sub_footer_navigation": get_sub_footer(),
+        "main_navigation": get_main_nav(),
+        "account_navigation": get_account_nav(),
+    }

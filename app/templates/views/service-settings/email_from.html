@@ -25,7 +25,7 @@
     {% set save_txt = _('Save') %}
     {% set hint_txt = _('Maximum 64 characters with no spaces. Characters can include letters, numbers, dots, dashes, and underscores.') %}
     {{ textbox(form.email_from, hint=hint_txt) }}
-    <div id="preview" class="focus:outline-yellow mb-gutter" tabindex="0">
+    <div id="preview" class=" mb-gutter" tabindex="0">
       {% call confirmation_preview() %}
       <p class="m-0">{{_("Check that your email address is formatted correctly.")}}</p>
       <p class="m-0">

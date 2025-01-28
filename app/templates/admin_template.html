@@ -11,20 +11,18 @@
 {% set extra_title = ' - ' + current_service.name if current_service.name and current_user.has_permissions() else ''  %}
 
 {% block page_title %}
-   {% block per_page_title %}{% endblock %} {% block service_page_title %}{% endblock %} {{ extra_title }} – {{ _('Notify') }}
+{% block per_page_title %}{% endblock %} {% block service_page_title %}{% endblock %}
+{{ extra_title }} – {{ _('Notify') }}
 {% endblock %}
 
 {% block content %}
-  <div id="main_content" class="container px-gutterHalf contain-floats flex-grow">
-      <div class="grid-row contain-floats">
-        <main role="main" class="w-full float-left {% block main_content_class %}py-10{% endblock %} px-gutterHalf box-border column-main">
-          {% if show_tou_prompt() %}
-            {{ tou_prompt() }}    
-          {% else %}
-            {% include 'partials/flash_messages.html' %}
-            {% block maincolumn_content %}{% endblock %}
-          {% endif %}
-        </main>
-      </div>
-  </div>
+<main role="main" id="main_content"
+  class="box-border column-main container max-w-screen-xl {% block main_content_class %} py-10 space-y-doubleGutter {% endblock %}">
+  {% if show_tou_prompt() %}
+  {{ tou_prompt() }}
+  {% else %}
+  {% include 'partials/flash_messages.html' %}
+  {% block maincolumn_content %}{% endblock %}
+  {% endif %}
+</main>
 {% endblock %}

@@ -1,6 +1,7 @@
 {% macro validation_summary(form=None, field_order=None) %}
   {% if form and form.errors %}
-    <div role="alert" tabindex="-1" class="border-4 border-red focus:outline-yellow mb-gutter p-gutter space-y-gutterHalf" id="validation-summary" data-testid="validation_summary" autofocus>
+    <div role="alert" tabindex="-1" class="border-4 border-red  mb-gutter p-gutter space-y-gutterHalf"
+      id="validation-summary" data-testid="validation_summary" autofocus>
       <h2 class="heading-medium m-0">{{ _('There was a problem') }}</h2>
       <ol class="list list-number list-outside m-0">
         {# Get a list of error keys #}

@@ -16,7 +16,7 @@
   }
 
   .message-name a:focus {
-    @apply outline-yellow border-0;
+    @apply outline-none shadow-outline;
   }
   .message-name a .message-name-separator {
     margin-right: -2px;

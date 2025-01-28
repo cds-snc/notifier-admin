@@ -18,7 +18,7 @@
     @apply text-blue-lightblue;
   }
   details summary:focus {
-    @apply outline-yellow;
+    @apply outline-none shadow-outline;
   }
 
   summary::-moz-details-marker,

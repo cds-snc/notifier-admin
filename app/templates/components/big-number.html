@@ -40,7 +40,7 @@
     {{ big_number(number, label, link=link, status=True, smaller=smaller, smallest=smallest) }}
     {% if show_failures %}
       {% if failure_link %}
-        <a class="big-number-link border-0 focus:border-b-0 " href="{{ failure_link }}">
+        <a class="big-number-link border-0" href="{{ failure_link }}">
       {% endif %}
       <div class="pb-4 big-number-status{% if danger_zone %} bg-red{% endif %}{% if not failures %} p-6{% endif %}">
         {% if failures %}
@@ -85,7 +85,7 @@
     {{ big_number(number, label, link=link, status=True, smaller=smaller, smallest=smallest) }}
 
     {% if failure_link %}
-      <a class="big-number-link border-0 focus:border-b-0" href="{{ failure_link }}">
+      <a class="big-number-link border-0" href="{{ failure_link }}">
     {% endif %}
     <div class="pb-4 no-underline text-white block border-solid {% if below_volume_threshold %}neutral{% elif bounce_status == "critical" or bounce_status == "warning" %}critical{% else %}normal{% endif %} {% if problem_percentage == 0 %} p-6 {% endif %}">
       {% if number >= 1 %}

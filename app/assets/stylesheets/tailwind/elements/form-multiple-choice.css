@@ -68,7 +68,7 @@
 
   /* Focus state */
   .multiple-choice [type="radio"]:focus + label:before {
-    @apply shadow-outline4;
+    @apply shadow-outline;
   }
   .multiple-choice [type="checkbox"]:focus + label:before {
     @apply shadow-outline;

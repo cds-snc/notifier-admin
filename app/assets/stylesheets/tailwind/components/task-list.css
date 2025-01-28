@@ -18,7 +18,7 @@
     margin-bottom: -2px;
     padding-top: 16px;
     padding-bottom: 16px;
-    @apply outline-yellow text-black border-transparent shadow-focusLine2;
+    @apply outline-none shadow-outline text-black border-transparent;
   }
 
   .task-list-item:focus-within .task-list-indicator-completed {

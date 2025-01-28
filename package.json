@@ -22,6 +22,7 @@
   "homepage": "https://github.com/cds-snc/notification-admin#readme",
   "dependencies": {
     "@babel/plugin-proposal-class-properties": "^7.14.5",
+    "@cdssnc/gcds-components": "^0.30.0",
     "@fortawesome/fontawesome-svg-core": "^6.6.0",
     "@fortawesome/free-solid-svg-icons": "^6.6.0",
     "accessible-autocomplete": "^2.0.4",

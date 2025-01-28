@@ -5,17 +5,20 @@
     @apply text-small leading-tight font-normal block p-0 mx-0 mt-gutterHalf mb-gutter text-center border-t-1 border-solid border-gray-grey2 border-b-0;
   }
   .show-more:focus,
-  .show-more-empty:focus {
-    @apply outline-none bg-transparent mb-gutter border-gray-grey2 border-b-0;
+  .show-more:focus-visible,
+  .show-more-empty:focus,
+  .show-more-empty:focus-visible {
+    @apply outline-none shadow-none bg-transparent;
   }
   .show-more:focus span,
-  .show-more-empty:focus span {
-    @apply bg-yellow outline-none border-b-1 border-blue;
+  .show-more:focus-visible span,
+  .show-more-empty:focus span,
+  .show-more-empty:focus-visible span {
+    @apply outline-none shadow-outline bg-yellow text-black border-0;
   }
   .show-more span,
   .show-more-empty span {
     top: -11px;
-    outline: 10px solid white;
     @apply relative bg-white inline-block border-b-1 border-solid border-blue;
   }
 

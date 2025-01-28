@@ -48,7 +48,7 @@
 
   .big-number-link:active,
   .big-number-link:focus {
-    @apply outline-yellow bg-blue;
+    @apply outline outline-offset-2 outline-yellow-300 outline-3 shadow-outline bg-blue z-10;
   }
 
   .big-number-link:hover .big-number-label,
@@ -71,13 +71,13 @@
   .big-number-status-link:focus {
     background-color: revert;
     box-shadow: none;
-    @apply outline-yellow border-0;
+    @apply outline-none shadow-outline;
   }
 
   /* Covers -normal, -warn, -critical */
   div[class*="review-email-status-"]:active,
   div[class*="review-email-status-"]:focus {
-    @apply outline-yellow;
+    @apply outline-none shadow-outline;
   }
 
   div[class*="review-email-status-"]:hover
