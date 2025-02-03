@@ -286,6 +286,7 @@ def init_app(application):
         return {
             "admin_base_url": application.config["ADMIN_BASE_URL"],
             "asset_url": asset_fingerprinter.get_url,
+            "sri_hash": asset_fingerprinter.get_sri,
             "asset_s3_url": asset_fingerprinter.get_s3_url,
             "current_lang": get_current_locale(application),
             "documentation_url": documentation_url,
