@@ -5,7 +5,7 @@ import { TemplatesPage as Page } from "../../Notify/Admin/Pages/all";
 
 describe("Template categories", () => {
   beforeEach(() => {
-    cy.login(Cypress.env("NOTIFY_USER"), Cypress.env("NOTIFY_PASSWORD"));
+    cy.login();
     cy.visit(`/services/${config.Services.Cypress}/templates`);
   });
 

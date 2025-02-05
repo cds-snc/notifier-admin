@@ -12,7 +12,11 @@ let Actions = {
     AgreeToTerms: () => {
         TouPrompt.Components.Terms().scrollTo('bottom', { ensureScrollable: false });
         Components.DismissButton().click();
-        cy.url().should('include', '/accounts');
+        // depending on how many services a user has, the app either goes to the /accounts page 
+        // or to a specific service page - either means success
+        cy.url().should('match', /\/(accounts|services)/); 
+        cy.get('h1').should('not.contain', 'Before you continue');
+
     },
 };
 

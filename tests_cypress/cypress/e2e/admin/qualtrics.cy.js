@@ -17,7 +17,7 @@ describe("Qualtrics", () => {
   });
 
   it("survey button appears and survey opens", () => {
-    cy.visit(`/services/${config.Services.Notify}`);
+    cy.visit(`/services/${config.Services.Cypress}`);
     cy.contains("h1", "Dashboard").should("be.visible");
     cy.get("#QSIFeedbackButton-btn").should("be.visible"); // qualtrics survey button
     cy.get("#QSIFeedbackButton-btn").click(); // click the button

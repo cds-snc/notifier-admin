@@ -9,7 +9,7 @@ import { Admin } from "../../../Notify/NotifyAPI";
 
 describe("Template Categories", () => {
   beforeEach(() => {
-    cy.login(Cypress.env("NOTIFY_ADMIN_USER"), Cypress.env("NOTIFY_PASSWORD"));
+    cy.loginAsPlatformAdmin();
     cy.visit(`/template-categories`);
   });
 

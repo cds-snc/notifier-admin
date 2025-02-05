@@ -4,18 +4,6 @@ import config from "../../../../config";
 import { TemplatesPage as Page } from "../../../Notify/Admin/Pages/all";
 import { Admin } from "../../../Notify/NotifyAPI";
 
-// TODO: dont hardcode these
-const templates = {
-  smoke_test_email: {
-    name: "SMOKE_TEST_EMAIL",
-    id: "5e26fae6-3565-44d5-bfed-b18680b6bd39",
-  },
-  smoke_test_email_attach: {
-    name: "SMOKE_TEST_EMAIL_ATTACH",
-    id: "bf85def8-01b4-4c72-98a8-86f2bc10f2a4",
-  },
-};
-
 const categories = {
   OTHER: "Other",
   AUTH: "Authentication",
@@ -28,21 +16,21 @@ describe("Edit template", () => {
     // Override the process_type -> new process type should be saved for an existing template
     it("Should allow platform admin to override process type", () => {
       // login as admin
-      cy.login(
-        Cypress.env("NOTIFY_ADMIN_USER"),
-        Cypress.env("NOTIFY_PASSWORD"),
-      );
+      cy.loginAsPlatformAdmin();
       cy.visit(`/services/${config.Services.Cypress}/templates`);
 
       // set template priority to use TC
-      Page.SelectTemplate(templates.smoke_test_email.name);
+      Page.SelectTemplateById(
+        config.Services.Cypress,
+        config.Templates.SMOKE_TEST_SMS,
+      );
       Page.EditCurrentTemplate();
       Page.SetTemplatePriority("bulk");
       Page.SaveTemplate();
 
       // use api to check that it was set
       Admin.GetTemplate({
-        templateId: templates.smoke_test_email.id,
+        templateId: config.Templates.SMOKE_TEST_SMS,
         serviceId: config.Services.Cypress,
       }).then((response) => {
         console.log("response", response);
@@ -56,7 +44,7 @@ describe("Edit template", () => {
 
       // use api to check that it was overridden
       Admin.GetTemplate({
-        templateId: templates.smoke_test_email.id,
+        templateId: config.Templates.SMOKE_TEST_SMS,
         serviceId: config.Services.Cypress,
       }).then((response) => {
         console.log("response", response);
@@ -70,7 +58,7 @@ describe("Edit template", () => {
 
       // use api to check that it was overridden
       Admin.GetTemplate({
-        templateId: templates.smoke_test_email.id,
+        templateId: config.Templates.SMOKE_TEST_SMS,
         serviceId: config.Services.Cypress,
       }).then((response) => {
         console.log("response", response);
@@ -83,7 +71,7 @@ describe("Edit template", () => {
       const template_name = "Test Template";
 
       // seed data
-      cy.login(Cypress.env("NOTIFY_USER"), Cypress.env("NOTIFY_PASSWORD"));
+      cy.login();
       cy.visit(`/services/${config.Services.Cypress}/templates`);
       Page.CreateTemplate();
       Page.SelectTemplateType("email");
@@ -127,14 +115,14 @@ describe("Edit template", () => {
     it("Should allow platform admin to override process type", () => {
       // Admin user 1.
       // login as admin
-      cy.login(
-        Cypress.env("NOTIFY_ADMIN_USER"),
-        Cypress.env("NOTIFY_PASSWORD"),
-      );
+      cy.loginAsPlatformAdmin();
       cy.visit(`/services/${config.Services.Cypress}/templates`);
 
       // set template priority to use TC
-      Page.SelectTemplate(templates.smoke_test_email_attach.name);
+      Page.SelectTemplateById(
+        config.Services.Cypress,
+        config.Templates.SMOKE_TEST_EMAIL,
+      );
       Page.EditCurrentTemplate();
       Page.Components.TemplateSubject().type("a");
       Page.SetTemplatePriority("bulk");
@@ -142,16 +130,15 @@ describe("Edit template", () => {
 
       // use api to check that it was set
       Admin.GetTemplate({
-        templateId: templates.smoke_test_email_attach.id,
+        templateId: config.Templates.SMOKE_TEST_EMAIL,
         serviceId: config.Services.Cypress,
       }).then((response) => {
-        console.log("response", response);
         expect(response.body.data.process_type_column).to.equal("bulk");
       });
     });
 
     it("Should set process_type to null and use category's process_type when non-admin changes a template's category", () => {
-      cy.login(Cypress.env("NOTIFY_USER"), Cypress.env("NOTIFY_PASSWORD"));
+      cy.login();
       cy.visit(`/services/${config.Services.Cypress}/templates`);
 
       // Seed data with a template before we start with the test.
@@ -184,10 +171,7 @@ describe("Edit template", () => {
     });
 
     it("Should override process_type when a template has a category and user is admin", () => {
-      cy.login(
-        Cypress.env("NOTIFY_ADMIN_USER"),
-        Cypress.env("NOTIFY_PASSWORD"),
-      );
+      cy.loginAsPlatformAdmin();
       cy.visit(`/services/${config.Services.Cypress}/templates`);
 
       // Seed data with a template before we start with the test.
@@ -219,10 +203,7 @@ describe("Edit template", () => {
     });
 
     it("Should set the process type to null when a category is changed and user is admin", () => {
-      cy.login(
-        Cypress.env("NOTIFY_ADMIN_USER"),
-        Cypress.env("NOTIFY_PASSWORD"),
-      );
+      cy.loginAsPlatformAdmin();
       cy.visit(`/services/${config.Services.Cypress}/templates`);
 
       // seed data with a template before we start with the test.

@@ -9,7 +9,7 @@ import {
 
 describe("Review Pool", () => {
   beforeEach(() => {
-    cy.login(Cypress.env("NOTIFY_USER"), Cypress.env("NOTIFY_PASSWORD"));
+    cy.login();
     cy.visit(`/services/${config.Services.Cypress}/review-pool`);
   });
   context("General page functionality", () => {
