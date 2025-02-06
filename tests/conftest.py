@@ -92,6 +92,22 @@ def service_two(api_user_active):
 
 
 @pytest.fixture(scope="function")
+def service_multi_member(api_user_active):
+    return service_json(
+        SERVICE_MULTI_MEMBER_ID,
+        "service multi-team-member",
+        [api_user_active, user_json(email_address="a-user@team-member.ca"), user_json(email_address="another-user@example.com")],
+    )
+
+
+@pytest.fixture(scope="function")
+def mock_team_members(mocker, service_multi_member):
+    mock_team_members = [Mock(email_domain=team_member["email_domain"]) for team_member in service_multi_member.users]
+    mocker.patch("app.models.service.Service.team_members", mock_team_members)
+    return mock_team_members
+
+
+@pytest.fixture(scope="function")
 def multiple_reply_to_email_addresses(mocker):
     def _get(service_id):
         return [
@@ -793,6 +809,7 @@ def mock_update_service_raise_httperror_duplicate_name(mocker):
 
 SERVICE_ONE_ID = "596364a0-858e-42c8-9062-a8fe822260eb"
 SERVICE_TWO_ID = "147ad62a-2951-4fa1-9ca0-093cd1a52c52"
+SERVICE_MULTI_MEMBER_ID = "ca1a6d94-cca9-476a-9d5a-49c21a79d938"
 ORGANISATION_ID = "c011fa40-4cbe-4524-b415-dde2f421bd9c"
 ORGANISATION_TWO_ID = "d9b5be73-0b36-4210-9d89-8f1a5c2fef26"
 TEMPLATE_ONE_ID = "b22d7d94-2197-4a7d-a8e7-fd5f9770bf48"
@@ -1432,6 +1449,7 @@ def api_user_active(fake_uuid):
         "name": "Test User",
         "password": "somepassword",
         "email_address": "test@user.canada.ca",
+        "email_domain": "user.canada.ca",
         "mobile_number": "6502532222",
         "blocked": False,
         "state": "active",

@@ -69,6 +69,7 @@ class Config(object):
     DEFAULT_SERVICE_LIMIT = env.int("DEFAULT_SERVICE_LIMIT", 50)
     DEFAULT_SMS_DAILY_LIMIT = env.int("DEFAULT_SMS_DAILY_LIMIT", 50)
     DOCUMENTATION_DOMAIN = os.getenv("DOCUMENTATION_DOMAIN", "documentation.notification.canada.ca")
+    REPLY_TO_DOMAINS_SAFELIST = ["gc.ca", "canada.ca"]
     EMAIL_2FA_EXPIRY_SECONDS = 1_800  # 30 Minutes
     EMAIL_EXPIRY_SECONDS = 3600  # 1 hour
 

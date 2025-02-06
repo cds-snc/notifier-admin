@@ -62,6 +62,22 @@ class CsvFileValidator:
             )
 
 
+class ValidTeamMemberDomain:
+    def __call__(self, form, field):
+        if not field.data:
+            return
+        email_domain = field.data.split("@")[-1]
+        # Merge domains from team members and safelisted domains, use set to ensure no duplicates
+        safelisted_domains = set(current_app.config.get("REPLY_TO_DOMAINS_SAFELIST", set()))
+        valid_domains = g.team_member_email_domains.union(safelisted_domains)
+
+        if email_domain not in valid_domains:
+            message = _(
+                "{} is not an email domain used by team members of this service. Only email domains found in your team list can be used as an email reply-to: {}."
+            ).format(email_domain, ", ".join(valid_domains))
+            raise ValidationError(message)
+
+
 class ValidGovEmail:
     def __call__(self, form, field):
         if not field.data:

@@ -53,6 +53,7 @@ from app.main.validators import (
     ValidCallbackUrl,
     ValidEmail,
     ValidGovEmail,
+    ValidTeamMemberDomain,
     validate_email_from,
     validate_service_name,
 )
@@ -124,7 +125,7 @@ class MultiCheckboxField(SelectMultipleField):
     option_widget = CheckboxInput()
 
 
-def email_address(label=_l("Email address"), gov_user=True, required=True):
+def email_address(label=_l("Email address"), gov_user=True, only_team_member_domains=False, required=True):
     if label == "email address":
         label = _l("email address")
     elif label == "phone number":
@@ -139,6 +140,9 @@ def email_address(label=_l("Email address"), gov_user=True, required=True):
 
     if required:
         validators.append(DataRequired(message=_l("Enter an email address")))
+
+    if only_team_member_domains:
+        validators.append(ValidTeamMemberDomain())
 
     return EmailField(label, validators, render_kw={"spellcheck": "false"})
 
@@ -1103,7 +1107,7 @@ class SelectCsvFromS3Form(StripWhitespaceForm):
 
 class ServiceReplyToEmailForm(StripWhitespaceForm):
     label_text = _l("Reply-to email address")
-    email_address = email_address(label=_l(label_text), gov_user=False)
+    email_address = email_address(label=_l(label_text), only_team_member_domains=True, gov_user=False)
     is_default = BooleanField(_l("Make this email address the default"))
 
 

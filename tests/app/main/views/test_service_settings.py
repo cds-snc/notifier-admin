@@ -780,7 +780,7 @@ def test_should_raise_duplicate_name_handled(
 
 
 @pytest.mark.parametrize(
-    ("count_of_users_with_manage_service," "count_of_invites_with_manage_service," "expected_user_checklist_item"),
+    ("count_of_users_with_manage_service,count_of_invites_with_manage_service,expected_user_checklist_item"),
     [
         (1, 0, "Add a team member who can manage settings Not completed"),
         (2, 0, "Add a team member who can manage settings Completed"),
@@ -1560,7 +1560,9 @@ def test_no_senders_message_shows(
         ("testtest", "Enter a valid email address"),
     ],
 )
-def test_incorrect_reply_to_email_address_input(reply_to_input, expected_error, client_request, no_reply_to_email_addresses):
+def test_incorrect_reply_to_email_address_input(
+    reply_to_input, expected_error, client_request, mock_team_members, no_reply_to_email_addresses, app_
+):
     page = client_request.post(
         "main.service_add_email_reply_to",
         service_id=SERVICE_ONE_ID,
@@ -1569,6 +1571,28 @@ def test_incorrect_reply_to_email_address_input(reply_to_input, expected_error, 
     )
 
     assert normalize_spaces(page.select_one(".error-message").text) == expected_error
+
+
+def test_incorrect_reply_to_domain_not_in_team_member_list(
+    client_request, mock_team_members, no_reply_to_email_addresses, app_, mocker
+):
+    page = client_request.post(
+        "main.service_add_email_reply_to",
+        service_id=SERVICE_ONE_ID,
+        _data={"email_address": "test@not-team-member-domain.ca"},
+        _expected_status=200,
+    )
+
+    valid_domains = set([member.email_domain for member in mock_team_members]).union(
+        set(app_.config.get("REPLY_TO_DOMAINS_SAFELIST", []))
+    )
+
+    assert (
+        normalize_spaces(page.select_one(".error-message").text)
+        == "not-team-member-domain.ca is not an email domain used by team members of this service. Only email domains found in your team list can be used as an email reply-to: {}.".format(
+            ", ".join(valid_domains)
+        )
+    )
 
 
 @pytest.mark.parametrize(
@@ -1640,8 +1664,11 @@ def test_incorrect_sms_sender_input(
         (create_multiple_email_reply_to_addresses(), {"is_default": "y"}, True),
     ],
 )
-def test_add_reply_to_email_address_sends_test_notification(mocker, client_request, reply_to_addresses, data, api_default_args):
+def test_add_reply_to_email_address_sends_test_notification(
+    mocker, client_request, reply_to_addresses, mock_team_members, data, api_default_args
+):
     mocker.patch("app.service_api_client.get_reply_to_email_addresses", return_value=reply_to_addresses)
+
     data["email_address"] = "test@example.com"
     mock_verify = mocker.patch(
         "app.service_api_client.verify_reply_to_email_address",
@@ -1856,7 +1883,9 @@ def test_add_sms_sender(sms_senders, data, api_default_args, mocker, client_requ
         ),
     ],
 )
-def test_default_box_doesnt_show_on_first_sender(sender_page, function_to_mock, mocker, data, checkbox_present, client_request):
+def test_default_box_doesnt_show_on_first_sender(
+    sender_page, function_to_mock, mock_team_members, mocker, data, checkbox_present, client_request
+):
     mocker.patch(function_to_mock, side_effect=lambda service_id: data)
 
     page = client_request.get(sender_page, service_id=SERVICE_ONE_ID)
@@ -1877,6 +1906,7 @@ def test_edit_reply_to_email_address_sends_verification_notification_if_address_
     reply_to_address,
     data,
     api_default_args,
+    mock_team_members,
     mocker,
     fake_uuid,
     client_request,
@@ -1886,14 +1916,14 @@ def test_edit_reply_to_email_address_sends_verification_notification_if_address_
         return_value={"data": {"id": "123"}},
     )
     mocker.patch("app.service_api_client.get_reply_to_email_address", return_value=reply_to_address)
-    data["email_address"] = "test@tbs-sct.gc.ca"
+    data["email_address"] = "test123@example.com"
     client_request.post(
         "main.service_edit_email_reply_to",
         service_id=SERVICE_ONE_ID,
         reply_to_email_id=fake_uuid,
         _data=data,
     )
-    mock_verify.assert_called_once_with(SERVICE_ONE_ID, "test@tbs-sct.gc.ca")
+    mock_verify.assert_called_once_with(SERVICE_ONE_ID, "test123@example.com")
 
 
 @pytest.mark.parametrize(
@@ -1912,6 +1942,7 @@ def test_edit_reply_to_email_address_goes_straight_to_update_if_address_not_chan
     mocker,
     fake_uuid,
     client_request,
+    mock_team_members,
     mock_update_reply_to_email_address,
 ):
     mocker.patch("app.service_api_client.get_reply_to_email_address", return_value=reply_to_address)
@@ -1941,6 +1972,7 @@ def test_edit_reply_to_email_address_goes_straight_to_update_if_address_not_chan
 def test_always_shows_delete_link_for_email_reply_to_address(
     mocker: MockerFixture,
     sender_details,
+    mock_team_members,
     fake_uuid,
     client_request,
 ):
@@ -1967,7 +1999,9 @@ def test_always_shows_delete_link_for_email_reply_to_address(
     assert link["href"] == partial_href(service_id=SERVICE_ONE_ID)
 
 
-def test_confirm_delete_reply_to_email_address(fake_uuid, client_request, get_non_default_reply_to_email_address):
+def test_confirm_delete_reply_to_email_address(
+    fake_uuid, client_request, mock_team_members, get_non_default_reply_to_email_address
+):
     page = client_request.get(
         "main.service_confirm_delete_email_reply_to",
         service_id=SERVICE_ONE_ID,
@@ -1976,14 +2010,14 @@ def test_confirm_delete_reply_to_email_address(fake_uuid, client_request, get_no
     )
 
     assert normalize_spaces(page.select_one(".banner-dangerous").text) == (
-        "Are you sure you want to delete this reply-to email address? " "Yes, delete"
+        "Are you sure you want to delete this reply-to email address? Yes, delete"
     )
     assert "action" not in page.select_one(".banner-dangerous form")
     assert page.select_one(".banner-dangerous form")["method"] == "post"
 
 
 def test_confirm_delete_default_reply_to_email_address(
-    mocker: MockerFixture, fake_uuid, client_request, get_default_reply_to_email_address
+    mocker: MockerFixture, fake_uuid, client_request, mock_team_members, get_default_reply_to_email_address
 ):
     reply_tos = create_multiple_email_reply_to_addresses()
     reply_to_for_deletion = reply_tos[1]
@@ -1998,7 +2032,7 @@ def test_confirm_delete_default_reply_to_email_address(
     )
 
     assert normalize_spaces(page.select_one(".banner-dangerous").text) == (
-        "Are you sure you want to delete this reply-to email address? " "Yes, delete"
+        "Are you sure you want to delete this reply-to email address? Yes, delete"
     )
     assert "action" not in page.select_one(".banner-dangerous form")
     assert page.select_one(".banner-dangerous form")["method"] == "post"
@@ -2100,7 +2134,7 @@ def test_confirm_delete_letter_contact_block(
     )
 
     assert normalize_spaces(page.select_one(".banner-dangerous").text) == (
-        "Are you sure you want to delete this contact block? " "Yes, delete"
+        "Are you sure you want to delete this contact block? Yes, delete"
     )
     assert "action" not in page.select_one(".banner-dangerous form")
     assert page.select_one(".banner-dangerous form")["method"] == "post"
@@ -2233,6 +2267,7 @@ def test_default_box_shows_on_non_default_sender_details_while_editing(
     sender_details,
     client_request,
     platform_admin_user,
+    mock_team_members,
     default_message,
     checkbox_present,
     is_platform_admin,
@@ -2321,7 +2356,7 @@ def test_confirm_delete_sms_sender(
     )
 
     assert normalize_spaces(page.select_one(".banner-dangerous").text) == (
-        "Are you sure you want to delete this text message sender? " "Yes, delete"
+        "Are you sure you want to delete this text message sender? Yes, delete"
     )
     assert "action" not in page.select_one(".banner-dangerous form")
     assert page.select_one(".banner-dangerous form")["method"] == "post"
@@ -3307,7 +3342,7 @@ def test_switch_service_enable_letters(
 
 
 @pytest.mark.parametrize(
-    ("initial_permissions," "expected_initial_value," "posted_value," "expected_updated_permissions"),
+    ("initial_permissions,expected_initial_value,posted_value,expected_updated_permissions"),
     [
         (
             ["email", "sms"],
@@ -3566,7 +3601,7 @@ def test_archive_service_prompts_user(
         service_id=SERVICE_ONE_ID,
     )
     assert normalize_spaces(delete_page.select_one(".banner-dangerous").text) == (
-        "Are you sure you want to delete ‘service one’? " "There’s no way to undo this. " "Yes, delete"
+        "Are you sure you want to delete ‘service one’? There’s no way to undo this. Yes, delete"
     )
     assert mocked_fn.called is False
 
@@ -4252,7 +4287,7 @@ def test_submit_email_branding_request(
         tags=["notify_action_add_branding"],
     )
     assert normalize_spaces(page.select_one(".banner-default").text) == (
-        "Thanks for your branding request. We’ll get back to you " "within one working day."
+        "Thanks for your branding request. We’ll get back to you within one working day."
     )
 
 

@@ -1,9 +1,10 @@
 from unittest.mock import Mock
 
 import pytest
+from flask import g
 from wtforms import ValidationError
 
-from app.main.forms import RegisterUserForm, ServiceSmsSenderForm
+from app.main.forms import RegisterUserForm, ServiceSmsSenderForm, ValidTeamMemberDomain
 from app.main.validators import NoCommasInPlaceHolders, OnlySMSCharacters, ValidGovEmail
 
 
@@ -86,6 +87,22 @@ def test_valid_list_of_white_list_email_domains(
 ):
     email_domain_validators = ValidGovEmail()
     email_domain_validators(None, _gen_mock_field(email))
+
+
+@pytest.mark.parametrize(
+    "email, raises", [("test@team-domain.ca", False), ("test@cds-snc.ca", False), ("test@not-my-team.ca", True)]
+)
+def test_valid_team_only_email_domains(email, app_, raises):
+    with app_.app_context(), app_.test_request_context():
+        g.team_member_email_domains = set(["team-domain.ca", "cds-snc.ca"])
+
+        team_only_domain_validator = ValidTeamMemberDomain()
+
+        if raises:
+            with pytest.raises(ValidationError):
+                team_only_domain_validator(None, _gen_mock_field(email))
+        else:
+            team_only_domain_validator(None, _gen_mock_field(email))
 
 
 @pytest.mark.parametrize(

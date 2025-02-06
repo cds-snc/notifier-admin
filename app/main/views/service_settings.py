@@ -5,6 +5,7 @@ from flask import (
     abort,
     current_app,
     flash,
+    g,
     jsonify,
     redirect,
     render_template,
@@ -580,6 +581,7 @@ def service_add_email_reply_to(service_id):
     form = ServiceReplyToEmailForm()
     first_email_address = current_service.count_email_reply_to_addresses == 0
     is_default = first_email_address if first_email_address else form.is_default.data
+    g.team_member_email_domains = set([team_member.email_domain for team_member in current_service.team_members])
     if form.validate_on_submit():
         try:
             notification_id = service_api_client.verify_reply_to_email_address(service_id, form.email_address.data)["data"]["id"]
@@ -696,6 +698,7 @@ def get_service_verify_reply_to_address_partials(service_id, notification_id):
 def service_edit_email_reply_to(service_id, reply_to_email_id):
     form = ServiceReplyToEmailForm()
     reply_to_email_address = current_service.get_email_reply_to_address(reply_to_email_id)
+    g.team_member_email_domains = set([team_member.email_domain for team_member in current_service.team_members])
     if request.method == "GET":
         form.email_address.data = reply_to_email_address["email_address"]
         form.is_default.data = reply_to_email_address["is_default"]
