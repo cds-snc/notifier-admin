@@ -67,7 +67,7 @@ def a11y_test(slug: str, html):
     return True
 
 
-@pytest.fixture
+@pytest.fixture(scope="session")
 def app_():
     app = Flask("app")
     create_app(app)
@@ -77,8 +77,6 @@ def app_():
 
     app.test_client_class = TestClient
     yield app
-
-    ctx.pop()
 
 
 @pytest.fixture(scope="function")
