@@ -332,7 +332,7 @@ def send_go_live_request(service, user, go_live_data) -> None:
         "service_id": str(service.id),
         "service_url": url_for(".service_dashboard", service_id=service.id, _external=True),
         "support_type": "go_live_request",
-        "main_use_case": go_live_data["purpose"],
+        "main_use_case": go_live_data["main_use_case"],
         "name": user.name,
         "email_address": user.email_address,
     }
@@ -345,13 +345,17 @@ def send_go_live_request(service, user, go_live_data) -> None:
         "department_org_name",
         "intended_recipients",
         "main_use_case",
-        "notification_types",
-        "expected_volume",
+        "other_use_case",
         "support_type",
+        "daily_email_volume",
+        "annual_email_volume",
+        "daily_sms_volume",
+        "annual_sms_volume",
+        "exact_daily_email",
+        "exact_daily_sms",
     }
     data = {key: go_live_data[key] for key in of_interest if key in go_live_data}
     data["intended_recipients"] = ", ".join(data["intended_recipients"])
-    data["notification_types"] = ", ".join(data["notification_types"])
     user_api_client.send_contact_request(data)
 
 

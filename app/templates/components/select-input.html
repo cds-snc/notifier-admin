@@ -41,7 +41,8 @@
   {% set group = "radiogroup" if input == "radio" else "group" if input == "checkbox" %}
   <div class="form-group contain-floats box-border mb-gutterHalf md:mb-gutter {% if field.errors %} form-group-error{% endif %}" {% if is_collapsible %} data-module="collapsible-checkboxes" {% if collapsible_opts.field %} data-field-label="{{ collapsible_opts.field }}" {% endif %} {% endif %}>
     <fieldset id="{{ field.id }}" class="contain-floats w-full" role="{{ group }}" {% if use_aria_labelledby %} aria-labelledby="{{ field.id }}-label"{% endif %} {% if testid %}data-testid="{{testid}}"{% endif %}>
-      <legend class="form-label heading-small{% if legend_style != 'text' %} {{ legend_style }}{% endif %}">
+      <legend id="{{ field.id }}-label"
+        class="form-label heading-small{% if legend_style != 'text' %} {{ legend_style }}{% endif %}">
         {% if is_page_heading %}<h1 class="heading-large">{% endif %}
         {% if hide_legend %}<span class="visually-hidden">{% endif %}
         {{ field.label.text|safe }}
@@ -81,7 +82,7 @@
             </span>
             {% endif %}
             {% if option_hints[option.data] %}
-              <span class="block block-label-hint max-w-80ch">
+              <span class="block block-label-hint max-w-80ch text-balance">
                 {{ option_hints[option.data] }}
               </span>
             {% endif %}

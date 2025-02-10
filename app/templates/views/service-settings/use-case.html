@@ -2,7 +2,7 @@
 {% from "components/form.html" import form_wrapper %}
 {% from "components/page-header.html" import page_header %}
 {% from "components/page-footer.html" import page_footer %}
-{% from "components/radios.html" import radios %}
+{% from "components/select-input.html" import select %}
 {% from "components/textbox.html" import textbox %}
 {% from "components/checkbox.html" import checkboxes %}
 
@@ -12,7 +12,7 @@
 
 {% block maincolumn_content %}
   <div class="grid-row contain-floats">
-    <div class="w-full float-left py-0 px-0 px-gutterHalf box-border">
+    <div class="w-full md:w-2/3 float-left py-0 px-0 px-gutterHalf box-border">
 
     {{ page_header(
       page_title,
@@ -27,23 +27,30 @@
           {{ _("This information helps us understand how GC Notify is being used so we can better meet your needs.") }}
         </p>
         {% if display_org_question %}
-          {{ textbox(form.department_org_name, width='md:w-2/3', autocomplete='organization') }}
+          {{ textbox(form.department_org_name, autocomplete='organization') }}
         {% endif %}
-        {{ textbox(form.purpose, width='md:w-2/3', hint='', rows=10) }}
+        {{ checkboxes(form.main_use_case, option_hints=form.main_use_case_hints) }}
+        {{ textbox(form.other_use_case, width="w-full", rows=3, required=false) }}
         {{ checkboxes(form.intended_recipients) }}
-
 
       {% elif current_step == "about-notifications" %}
 
         <p>
           {{ _("This information helps us set sending limits and budget accordingly.") }}
         </p>
-        {{ checkboxes(form.notification_types) }}
-        {{ radios(form.expected_volume) }}
+        <h2 class="heading-medium">{{ _("Emails") }}</h2>
+        {{ select(form.daily_email_volume, option_conditionals=form.volume_conditionals) }}
+        {{ select(form.annual_email_volume, option_conditionals=form.volume_conditionals) }}
+        
+        <h2 class="heading-medium">{{ _("Text messages") }}</h2>
+        {{ select(form.daily_sms_volume, option_conditionals=form.volume_conditionals) }}
+        {{ select(form.annual_sms_volume, option_conditionals=form.volume_conditionals) }}
+
 
         <!-- Coming from the previous step. If it's not included, checkboxes will be reset -->
         <div class="hidden">
           {{ checkboxes(form.intended_recipients) }}
+          {{ checkboxes(form.main_use_case) }}
         </div>
       {% endif %}
 

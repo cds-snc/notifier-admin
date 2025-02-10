@@ -32,8 +32,14 @@
       {% else %}
         {{ field.label.text }}
       {% endif %}
+      {% if not required %}
+      <span id="{{ field.name }}-optional" class="form-hint inline-block">
+        ({{ _("Optional") }})
+      </span>
+      {% endif %}
     </label>
     {% if is_page_heading %}</h1>{% endif %}
+    
     {% if hint %}
     {% set describedby = describedby + field.name + '-hint ' %}
       <span id="{{ field.name }}-hint" class="form-hint">

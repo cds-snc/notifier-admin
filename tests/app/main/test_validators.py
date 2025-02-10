@@ -2,8 +2,9 @@ from unittest.mock import Mock
 
 import pytest
 from wtforms import ValidationError
+from wtforms.validators import StopValidation
 
-from app.main.forms import RegisterUserForm, ServiceSmsSenderForm
+from app.main.forms import OptionalIntegerRange, RegisterUserForm, ServiceSmsSenderForm
 from app.main.validators import NoCommasInPlaceHolders, OnlySMSCharacters, ValidGovEmail
 
 
@@ -178,3 +179,72 @@ def test_sms_sender_form_validation(
     form.sms_sender.data = "00111222333"
     form.validate()
     assert "Can't start with 00" == form.errors["sms_sender"][0]
+
+
+@pytest.mark.parametrize(
+    "trigger_data, field_data, expected_error",
+    [
+        # Case 1: Trigger not activated
+        ("option_a", "invalid", "StopValidation"),
+        ("option_a", None, "StopValidation"),
+        ("option_a", "", "StopValidation"),
+        # Case 2: Trigger activated, valid values
+        ("trigger_value", 1000, "StopValidation"),
+        ("trigger_value", 5000, "StopValidation"),
+        # Case 3: Trigger actived, empty values
+        ("trigger_value", None, "This cannot be empty"),
+        ("trigger_value", "", "This cannot be empty"),
+        # Case 4: Trigger actived, values not within min and max
+        ("trigger_value", 999, "Number must be more than 1,000"),
+        ("trigger_value", 5001, "Number must be less than 5,000"),
+    ],
+)
+def test_optional_integer_range_validation(trigger_data, field_data, expected_error, mocker):
+    # Mock locale
+    mocker.patch("app.get_current_locale", return_value="en")
+
+    # Form mock with trigger field
+    form = Mock()
+    form.trigger_field = Mock(data=trigger_data)
+
+    # Integer field mock
+    field = Mock(data=field_data)
+    field.errors = []
+
+    # Init validator
+    validator = OptionalIntegerRange(
+        trigger_field="trigger_field",
+        trigger_value="trigger_value",
+        min=1000,
+        max=5000,
+    )
+
+    if expected_error:
+        # Test when we expect an error
+        if expected_error == "StopValidation":
+            with pytest.raises(StopValidation):
+                validator(form, field)
+        else:
+            with pytest.raises(ValidationError) as error:
+                validator(form, field)
+            assert str(error.value) == expected_error
+    else:
+        # Test when we expect no error
+        validator(form, field)
+        assert field.errors == []
+
+
+def test_optional_integer_range_custom_message():
+    form = Mock()
+    form.trigger_field = Mock(data="trigger_value")
+    field = Mock(data=None)
+
+    validator = OptionalIntegerRange(
+        trigger_field="trigger_field",
+        trigger_value="trigger_value",
+        message="Custom error message",
+    )
+
+    with pytest.raises(ValidationError) as exc:
+        validator(form, field)
+    assert str(exc.value) == "Custom error message"
