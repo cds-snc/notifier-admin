@@ -20,49 +20,68 @@ from tests.conftest import (
 
 
 @pytest.mark.parametrize(
-    "key_type, notification_status, provider_response, expected_status",
+    "key_type, notification_status, provider_response, feedback_reason, expected_status",
     [
-        (None, "created", None, "In transit"),
-        (None, "sending", None, "In transit"),
-        (None, "delivered", None, "Delivered"),
-        (None, "failed", None, "Failed"),
+        (None, "created", None, None, "In transit"),
+        (None, "sending", None, None, "In transit"),
+        (None, "delivered", None, None, "Delivered"),
+        (None, "failed", None, None, "Failed"),
         (
             None,
             "temporary-failure",
             None,
+            None,
             "Carrier issue",
         ),
-        (None, "permanent-failure", None, "No such number"),
-        (None, "technical-failure", None, "Tech issue"),
+        (None, "permanent-failure", None, None, "No such number"),
+        (None, "technical-failure", None, None, "Tech issue"),
         (
             None,
             "technical-failure",
             "Blocked as spam by phone carrier",
+            None,
             "Blocked as spam by phone carrier",
         ),
         (
             None,
             "permanent-failure",
             "The email address is on the GC Notify suppression list",
+            None,
             "The email address is on the GC Notify suppression list",
         ),
         (
             None,
             "permanent-failure",
             "Email address is on our email provider suppression list",
+            None,
             "Email address is on our email provider suppression list",
+        ),
+        (
+            None,
+            "pinpoint-failure",
+            None,
+            "NO_ORIGINATION_IDENTITIES_FOUND",
+            "Can't send to this international number",
+        ),
+        (
+            None,
+            "pinpoint-failure",
+            None,
+            "DESTINATION_COUNTRY_BLOCKED",
+            "Can't send to this international number",
         ),
         (
             None,
             "temporary-failure",
             "Email was rejected because of its attachments",
+            None,
             "Email was rejected because of its attachments",
         ),
-        ("team", "delivered", None, "Delivered"),
-        ("live", "delivered", None, "Delivered"),
-        ("test", "sending", None, "In transit (test)"),
-        ("test", "delivered", None, "Delivered (test)"),
-        ("test", "permanent-failure", None, "No such number (test)"),
+        ("team", "delivered", None, None, "Delivered"),
+        ("live", "delivered", None, None, "Delivered"),
+        ("test", "sending", None, None, "In transit (test)"),
+        ("test", "delivered", None, None, "Delivered (test)"),
+        ("test", "permanent-failure", None, None, "No such number (test)"),
     ],
 )
 @pytest.mark.parametrize(
@@ -83,6 +102,7 @@ def test_notification_status_page_shows_details_new_statuses(
     key_type,
     notification_status,
     provider_response,
+    feedback_reason,
     expected_status,
     app_,
 ):
@@ -91,6 +111,7 @@ def test_notification_status_page_shows_details_new_statuses(
     notification = create_notification(
         notification_status=notification_status,
         notification_provider_response=provider_response,
+        feedback_reason=feedback_reason,
         key_type=key_type,
     )
     _mock_get_notification = mocker.patch("app.notification_api_client.get_notification", return_value=notification)

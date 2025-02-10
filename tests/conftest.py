@@ -4789,6 +4789,7 @@ def create_notification(
     personalisation=None,
     content=None,
     notification_provider_response=None,
+    feedback_reason=None,
 ):
     noti = notification_json(
         service_id,
@@ -4798,6 +4799,7 @@ def create_notification(
         postage=postage,
         reply_to_text=reply_to_text,
         provider_response=notification_provider_response,
+        feedback_reason=feedback_reason,
     )["notifications"][0]
 
     noti_content = "hello ((name))" if content is None else content
@@ -4828,6 +4830,7 @@ def create_notifications(
     template_type="sms",
     rows=5,
     status=None,
+    feedback_reason=None,
     subject="subject",
     content="content",
     client_reference=None,
@@ -4855,6 +4858,7 @@ def create_notifications(
         template_type=template_type,
         client_reference=client_reference,
         status=status,
+        feedback_reason=feedback_reason,
         created_by_name="Firstname Lastname",
         postage=postage,
         to=to,

@@ -610,67 +610,77 @@ def test_big_numbers_and_search_dont_show_for_letters(
 
 @freeze_time("2017-09-27 16:30:00.000000")
 @pytest.mark.parametrize(
-    "message_type, status, expected_hint_status, single_line",
+    "message_type, status, feedback_reason, expected_hint_status, single_line",
     [
-        ("email", "created", "In transit since 2017-09-27T16:30:00+00:00", True),
-        ("email", "sending", "In transit since 2017-09-27T16:30:00+00:00", True),
+        ("email", "created", None, "In transit since 2017-09-27T16:30:00+00:00", True),
+        ("email", "sending", None, "In transit since 2017-09-27T16:30:00+00:00", True),
         (
             "email",
             "temporary-failure",
+            None,
             "Content or inbox issue 16:31:00",
             False,
         ),
-        ("email", "permanent-failure", "No such address 16:31:00", False),
-        ("email", "delivered", "Delivered 16:31:00", True),
-        ("sms", "created", "In transit since 2017-09-27T16:30:00+00:00", True),
-        ("sms", "sending", "In transit since 2017-09-27T16:30:00+00:00", True),
+        ("email", "permanent-failure", None, "No such address 16:31:00", False),
+        ("email", "delivered", None, "Delivered 16:31:00", True),
+        ("sms", "created", None, "In transit since 2017-09-27T16:30:00+00:00", True),
+        ("sms", "sending", None, "In transit since 2017-09-27T16:30:00+00:00", True),
         (
             "sms",
             "temporary-failure",
+            None,
             "Carrier issue 16:31:00",
             False,
         ),
-        ("sms", "permanent-failure", "No such number 16:31:00", False),
-        ("sms", "delivered", "Delivered 16:31:00", True),
-        ("letter", "created", "2017-09-27T16:30:00+00:00", True),
-        ("letter", "pending-virus-check", "2017-09-27T16:30:00+00:00", True),
-        ("letter", "sending", "2017-09-27T16:30:00+00:00", True),
-        ("letter", "delivered", "2017-09-27T16:30:00+00:00", True),
-        ("letter", "received", "2017-09-27T16:30:00+00:00", True),
-        ("letter", "accepted", "2017-09-27T16:30:00+00:00", True),
+        ("sms", "permanent-failure", None, "No such number 16:31:00", False),
+        ("sms", "pinpoint-failure", "DESTINATION_COUNTRY_BLOCKED", "Can't send to this international number 16:31:00", False),
+        ("sms", "pinpoint-failure", "NO_ORIGINATION_IDENTITIES_FOUND", "Can't send to this international number 16:31:00", False),
+        ("sms", "delivered", None, "Delivered 16:31:00", True),
+        ("letter", "created", None, "2017-09-27T16:30:00+00:00", True),
+        ("letter", "pending-virus-check", None, "2017-09-27T16:30:00+00:00", True),
+        ("letter", "sending", None, "2017-09-27T16:30:00+00:00", True),
+        ("letter", "delivered", None, "2017-09-27T16:30:00+00:00", True),
+        ("letter", "received", None, "2017-09-27T16:30:00+00:00", True),
+        ("letter", "accepted", None, "2017-09-27T16:30:00+00:00", True),
         (
             "letter",
             "cancelled",
+            None,
             "2017-09-27T16:30:00+00:00",
             False,
         ),  # The API won’t return cancelled letters
         (
             "letter",
             "permanent-failure",
+            None,
             "16:31:00",
             False,
         ),  # Deprecated for ‘cancelled’
         (
             "letter",
             "temporary-failure",
+            None,
             "2017-09-27T16:30:00+00:00",
             False,
         ),  # Not currently a real letter status
         (
             "letter",
             "virus-scan-failed",
+            None,
             "Virus detected 2017-09-27T16:30:00+00:00",
             False,
         ),
         (
             "letter",
             "validation-failed",
+            None,
             "Validation failed 2017-09-27T16:30:00+00:00",
             False,
         ),
         (
             "letter",
             "technical-failure",
+            None,
             "Technical failure 2017-09-27T16:30:00+00:00",
             False,
         ),
@@ -684,12 +694,13 @@ def test_sending_status_hint_displays_correctly_on_notifications_page_new_status
     mock_get_service_data_retention,
     message_type,
     status,
+    feedback_reason,
     expected_hint_status,
     single_line,
     mocker,
     app_,
 ):
-    notifications = create_notifications(template_type=message_type, status=status)
+    notifications = create_notifications(template_type=message_type, feedback_reason=feedback_reason, status=status)
     mocker.patch("app.notification_api_client.get_notifications_for_service", return_value=notifications)
 
     page = client_request.get(
