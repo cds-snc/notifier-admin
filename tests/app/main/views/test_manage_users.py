@@ -29,7 +29,8 @@ from tests.conftest import (
                 "Can Create and edit message templates "
                 "Can Send message templates "
                 "Can Manage settings and team "
-                "Can Manage API integration"
+                "Can Manage API integration "
+                "Leave team"
             ),
             (
                 "ZZZZZZZZ zzzzzzz@example.canada.ca "
@@ -49,7 +50,8 @@ from tests.conftest import (
                 "Cannot Create and edit message templates "
                 "Cannot Send message templates "
                 "Cannot Manage settings and team "
-                "Cannot Manage API integration"
+                "Cannot Manage API integration "
+                "Leave team"
             ),
             (
                 "ZZZZZZZZ zzzzzzz@example.canada.ca "
@@ -68,7 +70,8 @@ from tests.conftest import (
                 "Cannot Create and edit message templates "
                 "Cannot Send message templates "
                 "Cannot Manage settings and team "
-                "Cannot Manage API integration"
+                "Cannot Manage API integration "
+                "Leave team"
             ),
             (
                 "ZZZZZZZZ zzzzzzz@example.canada.ca "
@@ -87,7 +90,8 @@ from tests.conftest import (
                 "Can Create and edit message templates "
                 "Cannot Send message templates "
                 "Cannot Manage settings and team "
-                "Cannot Manage API integration"
+                "Cannot Manage API integration "
+                "Leave team"
             ),
             (
                 "ZZZZZZZZ zzzzzzz@example.canada.ca "
@@ -106,7 +110,8 @@ from tests.conftest import (
                 "Can Create and edit message templates "
                 "Cannot Send message templates "
                 "Cannot Manage settings and team "
-                "Cannot Manage API integration"
+                "Cannot Manage API integration "
+                "Leave team"
             ),
             (
                 "ZZZZZZZZ zzzzzzz@example.canada.ca "
@@ -193,7 +198,8 @@ def test_should_show_caseworker_on_overview_page(
         "Cannot Create and edit message templates "
         "Cannot Send message templates "
         "Cannot Manage settings and team "
-        "Cannot Manage API integration"
+        "Cannot Manage API integration "
+        "Leave team"
     )
     # [1:5] are invited users
     assert normalize_spaces(page.select(".user-list-item")[6].text) == (
@@ -1134,12 +1140,31 @@ def test_remove_user_from_service(
     active_user_with_permissions,
     service_one,
     mock_remove_user_from_service,
+    mocker,
 ):
+    mocker.patch("app.main.views.manage_users.current_user", id="1")
     client_request.post(
         "main.remove_user_from_service",
         service_id=service_one["id"],
         user_id=active_user_with_permissions["id"],
         _expected_redirect=url_for("main.manage_users", service_id=service_one["id"]),
+    )
+    mock_remove_user_from_service.assert_called_once_with(service_one["id"], str(active_user_with_permissions["id"]))
+
+
+def test_remove_yourself_from_service_redirects_to_my_services(
+    client_request,
+    active_user_with_permissions,
+    service_one,
+    mock_remove_user_from_service,
+    mocker,
+):
+    mocker.patch("app.main.views.manage_users.current_user", id=active_user_with_permissions["id"])
+    client_request.post(
+        "main.remove_user_from_service",
+        service_id=service_one["id"],
+        user_id=active_user_with_permissions["id"],
+        _expected_redirect=url_for("main.choose_account"),
     )
     mock_remove_user_from_service.assert_called_once_with(service_one["id"], str(active_user_with_permissions["id"]))
 

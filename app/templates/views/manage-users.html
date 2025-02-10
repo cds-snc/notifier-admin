@@ -4,12 +4,32 @@
 {% from "components/tick-cross.html" import tick_cross %}
 {% from "components/textbox.html" import textbox %}
 {% from "components/live-search.html" import live_search %}
+{% from "components/banner.html" import banner_wrapper %}
 
 {% block service_page_title %}
   {{ _('Team members') }}
 {% endblock %}
 
 {% block maincolumn_content %}
+
+  {% if leave_service %}
+    {% call banner_wrapper(
+      type="dangerous",
+      delete_button=_("Yes, leave team"),
+      subhead='{} “{}”'.format(_("You’re leaving the team for"), current_service.name),
+      action=url_for('.remove_user_from_service', service_id=current_service.id, user_id=current_user.id)
+      ) %}
+      <p>{{ _("For this service, you will not be able to:") }}</p>
+      <ul class="list list-bullet banner-list-bullet ml-10">
+        {% for permission, label in permissions %}
+          <li>{{ label }}</li>
+        {% endfor %}
+      </ul>
+      <p>
+        {{ _("To rejoin this team, you’ll need an invitation from a team member.") }}
+      </p>
+    {% endcall %}
+  {% endif %}
 
   <h1 class="heading-medium">
     {{ _('Team members') }}
@@ -91,17 +111,19 @@
               </div>
             {% endif %}
           </div>
-          {% if current_user.has_permissions('manage_service') %}
-            <ul class="flex-grow px-gutterHalf">
-              <li class="tick-cross-list-edit-link">
-                {% if user.status == 'pending' %}
-                  <a href="{{ url_for('.cancel_invited_user', service_id=current_service.id, invited_user_id=user.id)}}">{{ _('Cancel invitation') }}</a>
-                {% elif user.state == 'active' and current_user.id != user.id %}
-                  <a href="{{ url_for('.edit_user_permissions', service_id=current_service.id, user_id=user.id)}}" aria-label="{{ _('Change details for') }} {{ user.name }}" >{{ _('Change details') }}</a>
-                {% endif %}
-              </li>
-            </ul>
-          {% endif %}
+          <ul class="flex-grow px-gutterHalf">
+            <li class="tick-cross-list-edit-link">
+              {% if current_user.has_permissions('manage_service') and user.status == 'pending' %}
+                <a href="{{ url_for('.cancel_invited_user', service_id=current_service.id, invited_user_id=user.id)}}">{{ _('Cancel invitation') }}</a>
+              {% elif current_user.has_permissions('manage_service') and user.state == 'active' and current_user.id != user.id %}
+                <a href="{{ url_for('.edit_user_permissions', service_id=current_service.id, user_id=user.id)}}" aria-label="{{ _('Change details for') }} {{ user.name }}" >{{ _('Change details') }}</a>
+              {% elif user.state == 'active' and current_user.id == user.id %}
+                <span class="delete-link">
+                  <a href="{{ url_for('.manage_users', service_id=current_service.id, leave_service=True) }}" aria-label="{{ _('Leave team') }}" >{{ _('Leave team') }}</a>
+                </span>
+              {% endif %}
+            </li>
+          </ul>
         </div>
       </div>
     {% endfor %}
