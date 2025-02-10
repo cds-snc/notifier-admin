@@ -1,0 +1,37 @@
+{% from "components/notice.html" import notice %}
+
+<div class="heading-large">Notice Component Examples</div>
+
+<hr />
+
+<h2 class="heading-medium">Info Notice - Basic</h2>
+{% call notice(type="info", title="System Maintenance Scheduled", headingLevel=3) %}
+  Scheduled maintenance will occur on July 1st from 2:00 AM to 4:00 AM EDT.
+{% endcall %}
+
+<h2 class="heading-medium">Success Notice - with HTML</h2>
+{% call notice(type="success", title="API Documentation Updated", headingLevel=3) %}
+New endpoints are available. Visit the <a href="#">API documentation</a> to learn more.
+{% endcall %}
+
+<h2 class="heading-medium">Warning Notice - Long Content</h2>
+{% call notice(type="warning", title="Trial Mode Limitations", headingLevel=3) %}
+  <p>Your service is in trial mode, which means:</p>
+  <ul class="list list-bullet ml-10">
+    <li>You can only send messages to registered team members</li>
+    <li>Daily message limit is capped at 50 messages</li>
+    <li>Templates are limited to test content only</li>
+  </ul>
+{% endcall %}
+
+<h2 class="heading-medium">Error Notice - Multiple Paragraphs</h2>
+{% call notice(type="error", title="Failed to Upload Template", headingLevel=3) %}
+  <p>The CSV file could not be processed due to formatting errors.</p>
+  <p>Common issues include:</p>
+  <ul class="list list-bullet ml-10">
+    <li>Missing required columns</li>
+    <li>Invalid phone numbers</li>
+    <li>Duplicate entries</li>
+  </ul>
+  <p>Please review the <a href="#">template guide</a> and try again.</p>
+{% endcall %}

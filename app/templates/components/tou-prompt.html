@@ -1,12 +1,20 @@
 {% from "components/links.html" import content_link %}
 {% from "components/terms.html" import tou_heading_list %}
+{% from "components/notice.html" import notice %}
 
 {% macro tou_prompt() %}
 
   <h1 class="heading-large mt-0 mb-4" tabindex="0" autofocus>{{ _('Before you continue') }}</h1>
-  <p>{{ _('GC Notify always shows your local time, except where we state otherwise.') }}</p>
+
+  {% if config["FF_CARETAKER"] %}
+    {% call notice(type="warning", title=_("Communicating during caretaker period"), headingLevel=2) %}
+      {{ _("Some communications are prohibited during a federal election. Check with your communications branch if you’re not sure you can send an announcement or other message. For more information, read the <a href='https://www.canada.ca/en/privy-council/services/publications/guidelines-conduct-ministers-state-exempt-staff-public-servants-election.html'>Guidelines</a>") }}
+    {% endcall %}    
+  {% endif %}
+
   <div class="mt-16 mb-10">
     <h2 class="heading-medium">{{ _('Review your activity') }}</h1>
+    <p>{{ _('GC Notify always shows your local time, except where we state otherwise.') }}</p>
     <p>{{ _('Review our records of your last 3 sign in times:') }}</p>
     <table>
       <tbody>

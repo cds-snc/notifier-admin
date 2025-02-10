@@ -1,0 +1,60 @@
+{#
+  @param type - One of: 'info', 'success', 'error', 'warning'
+  @param message - Text to display in notice (can include HTML)
+#}
+{% macro notice(type, title, headingLevel) %}
+  {# set icon/colors based on type #}
+  {% 
+    set display = {
+      'info': {
+        'icon': 'fa-circle-info',
+        'color': 'text-blue-500',
+        'border': 'border-blue-500',
+        'bg': 'bg-blue-100'
+      },
+      'success': {
+        'icon': 'fa-circle-check',
+        'color': 'text-green',
+        'border': 'border-green',
+        'bg': 'bg-green-light'
+      },
+      'error': {
+        'icon': 'fa-triangle-exclamation',
+        'color': 'text-red',
+        'border': 'border-red',
+        'bg': 'bg-red-light'
+      },
+      'warning': {
+        'icon': 'fa-circle-exclamation',
+        'color': 'text-orange',
+        'border': 'border-orange',
+        'bg': 'bg-orange-light'
+      }
+    }
+  %}
+  {# Text for screen readers instead of icon #}
+  {%
+    set screen_reader_text = {
+      'info': _('Information'),
+      'success': _('Success'),
+      'error': _('Error'),
+      'warning': _('Warning'),
+    }
+  %}
+  <div class="notice notice-{{ type }} overflow-hidden rounded-lg px-12 pt-12 border-4 {{display[type]['border']}} {{display[type]['bg']}}" role="alert" data-testid="notice">
+    <div class="flex gap-4 items-baseline">
+        <div class="notice-icon {{ display[type]['color'] }}" data-testid="notice-icon">
+          <i aria-hidden="true" class="mb-2 fa-solid fa-lg {{ display[type]['icon'] }}"></i>
+          <span class="sr-only" data-testid="notice-icon-text">{{ screen_reader_text[type] }}: </span>
+        </div>
+        <div class="notice-content ml-6 pb-12">
+            {% if headingLevel is defined and headingLevel is number and headingLevel >= 1 and headingLevel <= 3 %}
+                <h{{ headingLevel }} class="notice-heading heading-small md:heading-large mt-4" >{{ title }}</h{{ headingLevel }} data-testid="notice-heading">
+            {% else %}
+                <div data-testid="notice-heading">{{ title }}</div>
+            {% endif %}
+            <div data-testid="notice-message">{{ caller() }}</div>
+        </div>
+    </div>
+  </div>
+{% endmacro %}
