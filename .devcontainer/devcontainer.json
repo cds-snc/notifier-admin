@@ -39,6 +39,8 @@
 				"[python]": {
 					"editor.defaultFormatter": "charliermarsh.ruff"
 				},
+				"python.defaultInterpreterPath": "/home/vscode/.venvs/notification-admin/bin/python",
+				"python.venvPath": "/home/vscode/.venvs",
 				"useAdminDebug": true,
 				"debug.default.configuration": "Python: Remote Attach",
 				"debug.toolBarLocation": "docked",
@@ -127,7 +129,7 @@
 						}
 					]
 				}
-			}			
+			}
 		}
 	},
 	"features": {
