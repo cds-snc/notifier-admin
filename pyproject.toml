@@ -33,7 +33,7 @@ Flask = "2.3.3"
 Flask-Babel = "2.0.0"
 Flask-Caching = "1.11.1"
 Flask-Login = "0.6.3"
-Flask-WTF = "1.2.1"
+Flask-WTF = "1.2.2"
 gevent = "23.9.1"
 greenlet = "3.1.1"
 gunicorn = "22.0.0"
@@ -41,16 +41,16 @@ gunicorn = "22.0.0"
 itsdangerous = "2.2.0"  # pyup: <1.0.0
 newrelic = "10.3.0"
 notifications-python-client = "6.4.1"
-notifications-utils = { git = "https://github.com/cds-snc/notifier-utils.git", tag = "53.1.1"}
+notifications-utils = { git = "https://github.com/cds-snc/notifier-utils.git", tag = "53.1.2"}
 pwnedpasswords = "2.0.0"
-pyexcel = "0.7.0"
-pyexcel-io = "0.6.6"
+pyexcel = "0.7.1"
+pyexcel-io = "0.6.7"
 pyexcel-ods3 = "0.6.1"
 pyexcel-xls = "0.7.0"
 pyexcel-xlsx = "0.6.0"
 python-dotenv = "1.0.1"
 pytz = "2021.3"
-PyYAML = "6.0.1"
+PyYAML = "6.0.2"
 redis = "3.5.3" # pinned for now
 timeago = "1.0.16"
 translate-toolkit = "3.13.2"
@@ -83,9 +83,9 @@ ruff = "^0.8.2"
 types-beautifulsoup4 = "^4.12.0.6"
 
 # stubs libraries to keep mypy happy
-types-python-dateutil = "2.9.0.20241003"
+types-python-dateutil = "2.9.0.20241206"
 types-pytz = "2021.3.8"
-types-requests = "2.32.0.20240914"
+types-requests = "2.32.0.20241016"
 
 
 
